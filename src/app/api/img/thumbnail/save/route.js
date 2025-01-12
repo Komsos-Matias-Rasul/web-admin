@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { Storage } from "@google-cloud/storage"
+import { getDB } from "@/lib/db"
 import sharp from "sharp"
 
 export const config = {
@@ -11,7 +12,6 @@ export const config = {
 const postImage = (buffer, fileName) => {
   const bucketName = process.env.GCLOUD_BUCKET || ""
   const b_cred = process.env.GOOGLE_CREDENTIALS_BASE64 || ""
-  const encodedFileURL = encodeURIComponent(fileName)
 
   const _cred = JSON.parse(Buffer.from(b_cred, "base64").toString())
 
@@ -23,7 +23,7 @@ const postImage = (buffer, fileName) => {
       })
 
       const bucket = storage.bucket(bucketName)
-      const _file = bucket.file(encodedFileURL+".webp")
+      const _file = bucket.file(fileName+".webp")
       const stream = _file.createWriteStream()
 
       stream.on('error', (err) => {
@@ -31,47 +31,44 @@ const postImage = (buffer, fileName) => {
       })
 
       stream.on('finish', () => {
-        console.log(`File uploaded to ${bucketName} as ${encodedFileURL}.webp`)
+        console.log(`File uploaded to ${bucketName} as ${fileName}.webp`)
       })
 
       stream.end(buffer)
-      resolve(`/api/img?title=${encodedFileURL}.webp`)
+      resolve(`/api/img?title=${fileName}.webp`)
     } catch (err) {
       reject(err)
     }
   })
 }
 
-const waitTime = (time) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, time)
-  })
-}
 export const POST = async (req, res) => {
+  const param = req.nextUrl.searchParams
+  const slug = param.get("slug")
   const formData = await req.formData()
-  const file = formData.get("image")
+  const file = formData.get("thumbnail")
   const arrayBuffer = await file.arrayBuffer()
   const buffer = new Uint8Array(arrayBuffer)
   let url
-  
   if (!file) {
-    return NextResponse.json({ error: 'No file uploaded' }, {status: 400})
+    return NextResponse.json({ error: 'No file uploaded' }, { status: 400 })
   }
-  const fileName = file.name.split(".")[0]
-
+  const fileName = `${slug}_thumb`
   try {
     const compressedBuffer = await sharp(buffer).webp({quality: 60}).toBuffer()
     url = await postImage(compressedBuffer, fileName)
+    const pool = getDB()
+    const q = `
+      UPDATE articles
+      SET thumb_img = $1, headline_img = $1
+      WHERE slug = $2;
+    `
+    const value = [url, slug]
+    await pool.query(q, value)
   }
   catch (err) {
     console.error('Error saving the file:', err)
-    return NextResponse.json({ error: 'Error saving the file'}, {status: 500})
+    return NextResponse.json({ error: 'Error saving the file' }, { status: 500 })
   }
-  await waitTime(2000)
-  return NextResponse.json({
-    success: 1,
-    file: {
-      url: url,
-    }
-  }, { status: 200 })
+  return NextResponse.json({status: "OK"}, { status: 201 })
 }

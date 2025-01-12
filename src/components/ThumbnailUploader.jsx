@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const ThumbnailUploader = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
+const ThumbnailUploader = ({thumbnail, setThumbnail}) => {
   const [previewUrl, setPreviewUrl] = useState(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setSelectedFile(file);
+      setThumbnail(file);
       
       // Create a preview URL
       const reader = new FileReader();
@@ -15,29 +14,6 @@ const ThumbnailUploader = () => {
         setPreviewUrl(reader.result);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  const handleUpload = () => {
-    if (selectedFile) {
-      // Actual upload logic would go here
-      const formData = new FormData();
-      formData.append('image', selectedFile);
-      
-      // Example of how you might upload to a server
-      // fetch('/api/upload', {
-      //   method: 'POST',
-      //   body: formData
-      // })
-      // .then(response => response.json())
-      // .then(data => {
-      //   console.log('Upload successful', data);
-      // })
-      // .catch(error => {
-      //   console.error('Upload failed', error);
-      // });
-
-      console.log('File ready to upload:', selectedFile);
     }
   };
 
@@ -51,7 +27,6 @@ const ThumbnailUploader = () => {
           Thumbnail: <span className='text-rose-500'>*</span>
         </label>
         <input 
-          id="imageUpload"
           type="file" 
           onChange={handleFileChange}
           accept="image/*"
@@ -66,7 +41,7 @@ const ThumbnailUploader = () => {
 
       {previewUrl && (
         <div className="mb-2 text-center">
-          <h3 className="text-lg font-medium mb-2 text-gray-700">Preview</h3>
+          <h3 className="text-lg font-medium mb-2 text-gray-700">Thumbnail Preview:</h3>
           <div className="flex justify-center">
             <img 
               src={previewUrl} 
@@ -76,20 +51,6 @@ const ThumbnailUploader = () => {
           </div>
         </div>
       )}
-
-      <button 
-        onClick={handleUpload}
-        disabled={!selectedFile}
-        className={`w-full py-3 rounded-lg text-white text-sm font-semibold transition-colors duration-300 
-          ${selectedFile 
-            ? 'bg-violet-600 hover:bg-violet-700 active:bg-violet-800' 
-            : 'bg-gray-400 cursor-not-allowed'
-          }`}
-      >
-        {selectedFile 
-          ? `Upload ${selectedFile.name}` 
-          : 'Select an Image'}
-      </button>
     </div>
   );
 };
