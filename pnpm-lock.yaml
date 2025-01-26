@@ -17,6 +17,9 @@ importers:
       '@editorjs/image':
         specifier: ^2.10.1
         version: 2.10.1
+      '@editorjs/list':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@editorjs/quote':
         specifier: ^2.7.4
         version: 2.7.4
@@ -106,6 +109,9 @@ packages:
 
   '@editorjs/image@2.10.1':
     resolution: {integrity: sha512-ECjYQCEuPRzyruKY4+6XOyukQ2sCw4+9O1Jg8sDHyqbHLq0DMe+tgVsuXR+yfOXdocnywBOg4kLsJiP1uUYFcA==}
+
+  '@editorjs/list@2.0.3':
+    resolution: {integrity: sha512-Vj1EuyE9rZUgLxedXUagYFUIjcnIz0OL46BMq55r577ZQO9PPOh15jvgQcOjOx1ScuL3cc3+bv2fWyAVGpnLQg==}
 
   '@editorjs/quote@2.7.4':
     resolution: {integrity: sha512-767+J04/0ESnHKJtooKuBdFGJQjwC1SReMADjKuXLrKJsrBhAV0I4ocXmqf+SIpl4fVhZQo8yVyN/CmfC0e3Tw==}
@@ -2546,6 +2552,10 @@ snapshots:
   '@editorjs/helpers@0.0.4': {}
 
   '@editorjs/image@2.10.1':
+    dependencies:
+      '@codexteam/icons': 0.3.3
+
+  '@editorjs/list@2.0.3':
     dependencies:
       '@codexteam/icons': 0.3.3
 

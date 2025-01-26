@@ -12,6 +12,7 @@
     "@editorjs/editorjs": "^2.30.7",
     "@editorjs/header": "^2.8.8",
     "@editorjs/image": "^2.10.1",
+    "@editorjs/list": "^2.0.3",
     "@editorjs/quote": "^2.7.4",
     "@google-cloud/storage": "^7.14.0",
     "@nextui-org/button": "^2.0.38",

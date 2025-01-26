@@ -1,10 +1,18 @@
 import Header from "@editorjs/header"
 import Quote from "@editorjs/quote"
 import ImageTool from "@editorjs/image"
+import EditorjsList from "@editorjs/list"
 
 export const PLUGINS = {
   header: Header,
   quote: Quote,
+  list: {
+      class: EditorjsList,
+      inlineToolbar: true,
+      config: {
+        defaultStyle: 'unordered'
+      },
+    },
   image: {
     class: ImageTool,
     config: {

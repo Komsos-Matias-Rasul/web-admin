@@ -20,7 +20,7 @@ export const POST = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING id;
     `
-    const values = [data.title, slug, data.category, 3, JSON.stringify(data.content), JSON.stringify({ side: [], below: "" }), "null", "null", new Date().toISOString(), data.writer]
+    const values = [data.title, slug, data.category, 1, JSON.stringify(data.content), JSON.stringify({ side: [], below: "" }), "null", "null", new Date().toISOString(), data.writer]
     const result = await pool.query(q, values)
     id = result.rows[0].id
   }
