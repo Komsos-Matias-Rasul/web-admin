@@ -1,11 +1,12 @@
 'use client'
 import AdsUploader from "@/components/AdsUploader";
 import ThumbnailUploader from "@/components/ThumbnailUploader";
-import { Button } from "@nextui-org/button";
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/dropdown";
+import { Button } from "@heroui/button";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
 import { useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io"
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 export const Editor = dynamic(() => import("@/components/Editor"), {
   ssr: false,
@@ -61,12 +62,12 @@ const handleSubmit = async ({title, thumbnail, category, content, ads, writer}) 
 
 }
 
-const WriteArticle = ({categories}) => {
-  const [data, setData] = useState()
-  const [selectedCategory, setSelectedCategory] = useState("none")
-  const [thumbnail, setThumbnail] = useState(null)
-  const [articleTitle, setArticleTitle] = useState("")
-  const [articleWriter, setArticleWriter] = useState("")
+const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dataWriter="", dataCategory="none"}) => {
+  const [data, setData] = useState(dataContent)
+  const [selectedCategory, setSelectedCategory] = useState(dataCategory)
+  const [thumbnail, setThumbnail] = useState(dataThumbnail)
+  const [articleTitle, setArticleTitle] = useState(dataTitle)
+  const [articleWriter, setArticleWriter] = useState(dataWriter)
   const [ads, setAds] = useState({
     adV1: null,
     adV2: null,
@@ -80,9 +81,11 @@ const WriteArticle = ({categories}) => {
         <button className="text-white text-xl text-left p-4 rounded-lg hover:bg-white/20 hover:shadow-lg transition-all active:bg-black/20 active:scale-95">
           Write Article
         </button>
-        <button className="text-white text-xl text-left p-4 rounded-lg hover:bg-white/20 hover:shadow-lg transition-all active:bg-black/20 active:scale-95">
-          Draft
-        </button>
+        <Link href="/drafts">
+          <button className="text-white w-full text-xl text-left p-4 rounded-lg hover:bg-white/20 hover:shadow-lg transition-all active:bg-black/20 active:scale-95">
+            Draft
+          </button>
+        </Link>
       </div>
       <div className="w-full p-20 bg-neutral-100 flex flex-row-reverse">
         <div className="w-[70%] flex-shrink-0">
