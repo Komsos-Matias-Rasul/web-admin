@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const ThumbnailUploader = ({thumbnail, setThumbnail}) => {
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(thumbnail);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];

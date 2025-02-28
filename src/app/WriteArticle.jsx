@@ -3,7 +3,7 @@ import AdsUploader from "@/components/AdsUploader";
 import ThumbnailUploader from "@/components/ThumbnailUploader";
 import { Button } from "@heroui/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoMdArrowDropdown } from "react-icons/io"
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -74,6 +74,9 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
     adV3: null,
     adH1: null,
   })
+  useEffect(() => {
+    console.log(selectedCategory)
+  }, [selectedCategory])
 
   return (
     <div className="flex min-h-screen">
