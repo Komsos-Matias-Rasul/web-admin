@@ -16,16 +16,12 @@ const columns = [
     label: "TITLE",
   },
   {
-    key: "writer_name",
-    label: "WRITER",
+    key: "cover_img",
+    label: "COVER",
   },
   {
-    key: "category",
-    label: "CATEGORY",
-  },
-  {
-    key: "updated_at",
-    label: "LAST UPDATE",
+    key: "published_at",
+    label: "PUBLISH DATE",
   },
   {
     key: "action",
@@ -33,7 +29,7 @@ const columns = [
   },
 ];
 
-export const DraftTable = ({ rowData }) => {
+export const EditionsTable = ({ rowData }) => {
   return (
     <Table isStriped aria-label="Example table with dynamic content">
       <TableHeader columns={columns}>

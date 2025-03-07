@@ -1,5 +1,5 @@
 import { getDB } from "@/lib/db"
-import WriteArticle from "@/app/WriteArticle"
+import WriteArticle from "@/components/WriteArticle"
 
 const EditArticlePage = async ({ params }) => {
   const db = getDB()

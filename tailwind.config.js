@@ -5,7 +5,7 @@ module.exports = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@heroui/theme/dist/components/(button|dropdown|input|table|ripple|spinner|menu|divider|popover|form|checkbox|spacer).js"
+    "./node_modules/@heroui/theme/dist/components/(button|dropdown|input|modal|table|ripple|spinner|menu|divider|popover|form|checkbox|spacer).js"
   ],
   theme: {
     extend: {

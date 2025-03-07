@@ -8,14 +8,14 @@ import { FaCheck } from "react-icons/fa";
 
 const ActionsButtonGroup = ({ rowId }) => (
   <div className="flex gap-2">
-    <Link href={`/drafts/edit/${ rowId }`}>
+    <Link href={`/admin/drafts/${ rowId }`}>
       <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
     </Link>
     <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
   </div>
 )
 
-const DraftPage = async () => {
+const ArticlesPage = async () => {
   const db = getDB()
   let draftedArticle = []
   try{
@@ -41,25 +41,14 @@ const DraftPage = async () => {
     console.error(err)
   }
   return (
-    <div className="flex min-h-screen">
-      <div className="h-screen fixed flex flex-col px-8 py-4 w-[30%] flex-shrink-0 bg-gradient-to-br from-indigo-600 to-violet-700">
-        <button className="text-white text-xl text-left p-4 rounded-lg hover:bg-white/20 hover:shadow-lg transition-all active:bg-black/20 active:scale-95">
-          Write Article
-        </button>
-        <Link href="/drafts">
-          <button className="text-white w-full text-xl text-left p-4 rounded-lg hover:bg-white/20 hover:shadow-lg transition-all active:bg-black/20 active:scale-95">
-            Draft
-          </button>
-        </Link>
+    <>
+      <div className="w-full flex justify-between items-center mb-4">
+        <h1>Drafts</h1>
+        <Button as={Link} href="/admin/drafts/write" radius="sm">Write Article</Button>
       </div>
-      <div className="w-full p-20 bg-neutral-100 flex flex-row-reverse">
-        <div className="w-[70%] flex-shrink-0">
-          <h1>Drafts</h1>
-          <DraftTable rowData={draftedArticle} />
-        </div>
-      </div>
-    </div>
+      <DraftTable rowData={draftedArticle} />
+    </>
   )
 }
 
-export default DraftPage
+export default ArticlesPage

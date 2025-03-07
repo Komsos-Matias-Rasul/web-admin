@@ -1,7 +1,8 @@
 import { getDB } from "@/lib/db"
-import WriteArticle from "./WriteArticle"
+import WriteArticle from "@/components/WriteArticle"
 
-const MainPage = async () => {
+
+const WriteArticlePage = async () => {
   const db = getDB()
   let categories = {
     rows: [],
@@ -12,8 +13,10 @@ const MainPage = async () => {
     console.error(err)
   }
   return (
-    <WriteArticle categories={categories.rows}/>
+    <WriteArticle
+      categories={categories.rows}
+      />
   )
 }
 
-export default MainPage
+export default WriteArticlePage

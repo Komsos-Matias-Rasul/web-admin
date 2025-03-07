@@ -18,6 +18,7 @@
     "@heroui/button": "2.2.15",
     "@heroui/dropdown": "2.3.15",
     "@heroui/input": "2.4.15",
+    "@heroui/modal": "^2.2.12",
     "@heroui/system": "2.4.11",
     "@heroui/table": "^2.2.14",
     "@heroui/theme": "2.4.11",

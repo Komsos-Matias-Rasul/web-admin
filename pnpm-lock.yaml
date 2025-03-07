@@ -35,6 +35,9 @@ importers:
       '@heroui/input':
         specifier: 2.4.15
         version: 2.4.15(@heroui/system@2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(@heroui/theme@2.4.11(tailwindcss@3.4.15))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/modal':
+        specifier: ^2.2.12
+        version: 2.2.12(@heroui/system@2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
       '@heroui/system':
         specifier: 2.4.11
         version: 2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -246,6 +249,15 @@ packages:
       react: '>=18 || >=19.0.0-rc.0'
       react-dom: '>=18 || >=19.0.0-rc.0'
 
+  '@heroui/modal@2.2.12':
+    resolution: {integrity: sha512-kWoghgH/oihaBv0PzkfLbKDXWEZRVUHUEaxHCTI5Ut/5rAwxR/tYW9Wy+UW6m5nshefsq+RYh5cD9iPvDv4T1A==}
+    peerDependencies:
+      '@heroui/system': '>=2.4.7'
+      '@heroui/theme': '>=2.4.6'
+      framer-motion: '>=11.5.6 || >=12.0.0-alpha.1'
+      react: '>=18 || >=19.0.0-rc.0'
+      react-dom: '>=18 || >=19.0.0-rc.0'
+
   '@heroui/popover@2.3.15':
     resolution: {integrity: sha512-KPLRB5L5a185pyCjyFDanGfVb8x/jni4wNpZB0OaPmOHj1/uIDACkmtavIqxIHu8IzrRGnAO1c0nt6iNg2qjfA==}
     peerDependencies:
@@ -327,8 +339,24 @@ packages:
     peerDependencies:
       react: '>=18 || >=19.0.0-rc.0'
 
+  '@heroui/use-aria-modal-overlay@2.2.8':
+    resolution: {integrity: sha512-QYYF1zM+hZjUPnx40yDbhynH/d+2hEoYlduP6yhBXFiAk44mwm9hkJlLobQNZeiA+sobbN7EvguCYSoyYsOGYg==}
+    peerDependencies:
+      react: '>=18 || >=19.0.0-rc.0'
+      react-dom: '>=18 || >=19.0.0-rc.0'
+
   '@heroui/use-callback-ref@2.1.6':
     resolution: {integrity: sha512-icFp4WBWTZhypBcyu+5kir7nZLtvtQq7DDvGwkTtxsGnFHgGDc6sXXcOU6AcCdoGefmsiVp5c3D3lZ2pMlGHmA==}
+    peerDependencies:
+      react: '>=18 || >=19.0.0-rc.0'
+
+  '@heroui/use-disclosure@2.2.7':
+    resolution: {integrity: sha512-nSv2MgoWS/7MKpZGikIT1CID0VgomSs2XTCz2M011VD89v0A9k27qW68Qmf03oWyrl6UghC1XdgJe6IIsfq72A==}
+    peerDependencies:
+      react: '>=18 || >=19.0.0-rc.0'
+
+  '@heroui/use-draggable@2.1.7':
+    resolution: {integrity: sha512-TMeUiDT1yw2sSIPardaB3/JIFD12VO1pV3N/Jf0WyiYQO82v2VoturQHbRTvjI+69SjqapucZSYM0X7henlOwg==}
     peerDependencies:
       react: '>=18 || >=19.0.0-rc.0'
 
@@ -2799,6 +2827,30 @@ snapshots:
     transitivePeerDependencies:
       - framer-motion
 
+  '@heroui/modal@2.2.12(@heroui/system@2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@heroui/dom-animation': 2.1.6(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))
+      '@heroui/framer-utils': 2.1.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/react-utils': 2.1.8(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/shared-icons': 2.1.6(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/shared-utils': 2.1.7
+      '@heroui/system': 2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/theme': 2.4.11(tailwindcss@3.4.15)
+      '@heroui/use-aria-button': 2.2.9(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/use-aria-modal-overlay': 2.2.8(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/use-disclosure': 2.2.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@heroui/use-draggable': 2.1.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/dialog': 3.5.21(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/focus': 3.19.1(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/interactions': 3.23.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/overlays': 3.25.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/utils': 3.27.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-stately/overlays': 3.6.13(react@19.0.0-rc-66855b96-20241106)
+      '@react-types/overlays': 3.8.12(react@19.0.0-rc-66855b96-20241106)
+      framer-motion: 11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      react: 19.0.0-rc-66855b96-20241106
+      react-dom: 19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106)
+
   '@heroui/popover@2.3.15(@heroui/system@2.4.11(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
     dependencies:
       '@heroui/aria-utils': 2.2.12(@heroui/theme@2.4.11(tailwindcss@3.4.15))(framer-motion@11.12.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106))(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -2940,10 +2992,35 @@ snapshots:
     transitivePeerDependencies:
       - react-dom
 
+  '@heroui/use-aria-modal-overlay@2.2.8(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@react-aria/overlays': 3.25.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/utils': 3.27.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-stately/overlays': 3.6.13(react@19.0.0-rc-66855b96-20241106)
+      '@react-types/shared': 3.27.0(react@19.0.0-rc-66855b96-20241106)
+      react: 19.0.0-rc-66855b96-20241106
+      react-dom: 19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106)
+
   '@heroui/use-callback-ref@2.1.6(react@19.0.0-rc-66855b96-20241106)':
     dependencies:
       '@heroui/use-safe-layout-effect': 2.1.6(react@19.0.0-rc-66855b96-20241106)
       react: 19.0.0-rc-66855b96-20241106
+
+  '@heroui/use-disclosure@2.2.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@heroui/use-callback-ref': 2.1.6(react@19.0.0-rc-66855b96-20241106)
+      '@react-aria/utils': 3.27.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      '@react-stately/utils': 3.10.5(react@19.0.0-rc-66855b96-20241106)
+      react: 19.0.0-rc-66855b96-20241106
+    transitivePeerDependencies:
+      - react-dom
+
+  '@heroui/use-draggable@2.1.7(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)':
+    dependencies:
+      '@react-aria/interactions': 3.23.0(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
+      react: 19.0.0-rc-66855b96-20241106
+    transitivePeerDependencies:
+      - react-dom
 
   '@heroui/use-is-mobile@2.2.7(react@19.0.0-rc-66855b96-20241106)':
     dependencies:
