@@ -3,7 +3,7 @@ import { DraftTable } from "@/components/draft/DraftTable"
 import Link from "next/link"
 import { Button } from "@heroui/button"
 import { AiFillEdit } from "react-icons/ai";
-import { FaCheck } from "react-icons/fa";
+import { PublishButton } from "./PublishButton";
 
 
 const ActionsButtonGroup = ({ rowId }) => (
@@ -11,7 +11,7 @@ const ActionsButtonGroup = ({ rowId }) => (
     <Link href={`/admin/editor/edit/${ rowId }`}>
       <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
     </Link>
-    <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+    <PublishButton rowId={rowId} />
   </div>
 )
 
