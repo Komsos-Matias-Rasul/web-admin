@@ -21,3 +21,24 @@ export const publishArticle = async (articleId) => {
     return err
   }
 }
+
+export const createArticle = async (editionId) => {
+  const conn = getDB()
+  const UNCATEGORIZED = 1  // id of 'Uncategorized' category in categories table
+  try {
+    const res = await conn.query(
+      `
+      INSERT INTO articles (edition_id, title, category_id)
+      VALUES ($1, $2, $3)
+      RETURNING id
+      `, [Number(editionId), 'Untitled Article', UNCATEGORIZED])
+    if (res.rowCount > 0) {
+      console.log("new article created:", res.rows[0].id)
+      return res.rows[0].id
+    }
+    throw new Error("Update article failed")
+  } catch (err) {
+    console.error(err)
+    return err
+  }
+}

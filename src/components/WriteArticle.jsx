@@ -1,5 +1,4 @@
 'use client'
-import AdsUploader from "@/components/AdsUploader";
 import ThumbnailUploader from "@/components/ThumbnailUploader";
 import { Button } from "@heroui/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
@@ -11,22 +10,13 @@ export const Editor = dynamic(() => import("@/components/Editor"), {
   ssr: false,
 })
 
-const handleSubmit = async ({title, thumbnail, category, content, ads, writer}) => {
+const handleSubmit = async ({title, thumbnail, category, content, writer}) => {
   if (!title || !thumbnail || !content || category === "none") {
     alert("Please fill out the required fields")
     return
   }
   const thumbImg = new FormData()
   thumbImg.append('thumbnail', thumbnail)
-  
-  const {adV1, adV2, adV3, adH} = ads
-
-  const adImage = new FormData()
-  if (adV1) adImage.append('adV1', adV1)
-  if (adV2) adImage.append('adV2', adV2)
-  if (adV3) adImage.append('adV3', adV3)
-  if (adH) adImage.append('adH', adH)
-
   
   const articleData = {
     title,
@@ -61,18 +51,12 @@ const handleSubmit = async ({title, thumbnail, category, content, ads, writer}) 
 
 }
 
-const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dataWriter="", dataCategory="none"}) => {
+const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dataWriter="", dataCategory}) => {
   const [data, setData] = useState(dataContent)
-  const [selectedCategory, setSelectedCategory] = useState(dataCategory)
   const [thumbnail, setThumbnail] = useState(dataThumbnail)
   const [articleTitle, setArticleTitle] = useState(dataTitle)
   const [articleWriter, setArticleWriter] = useState(dataWriter)
-  const [ads, setAds] = useState({
-    adV1: null,
-    adV2: null,
-    adV3: null,
-    adH1: null,
-  })
+  const [selectedCategory, setSelectedCategory] = useState(dataCategory)
 
   return (
       <>
@@ -87,7 +71,6 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
             thumbnail: thumbnail,
             category: selectedCategory,
             content: data,
-            ads: ads,
           })} className="border-2 border-sky-500 bg-sky-500 px-3 py-1.5 rounded-lg text-white hover:bg-sky-600 hover:border-sky-600 transition-colors">
             Save Draft
           </button>
@@ -116,8 +99,9 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
             <DropdownTrigger>
               <Button className="bg-white shadow-lg" endContent={<IoMdArrowDropdown />}
               >
-                {selectedCategory === "none" ? "None" :
-                  categories.filter(c => c.id === Number(selectedCategory.currentKey))[0].label
+                {
+                  selectedCategory.currentKey ? categories.filter(c => c.id === Number(selectedCategory.currentKey))[0].label :
+                  categories.filter(c => c.id === Number(selectedCategory))[0].label
                 }
               </Button>
             </DropdownTrigger>
@@ -126,13 +110,9 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
               selectedKeys={selectedCategory}
               selectionMode="single"
               onSelectionChange={setSelectedCategory}
-              disabledKeys={["none"]}
-            >
-              <DropdownItem key="none">None</DropdownItem>
+              >
               {
-                categories.map((item) => (
-                  <DropdownItem key={item.id}>{item.label}</DropdownItem>
-                ))
+                categories.map((item) => <DropdownItem key={item.id}>{item.label}</DropdownItem>)
               }
             </DropdownMenu>
           </Dropdown>
@@ -142,9 +122,6 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
         </div>
         <div className="bg-white rounded-lg shadow-lg px-16 py-4 w-full mb-8">
           <Editor data={data} onChange={setData} editorBlock="editorjs-container"/>
-        </div>
-        <div className="w-full">
-          <AdsUploader ads={ads} setAds={setAds} />
         </div>
     </>
   );

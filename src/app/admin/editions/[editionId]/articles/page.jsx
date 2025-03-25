@@ -5,10 +5,11 @@ import { getDB } from "@/lib/db"
 import { Button } from "@heroui/button"
 import Link from "next/link"
 import { AiFillEdit } from "react-icons/ai"
+import { WriteArticleButton } from "./WriteArticleButton"
 
 const ActionsButtonGroup = ({ rowId }) => (
   <div className="flex gap-2">
-    <Link href={`/admin/editor/edit/${ rowId }`}>
+    <Link href={`/admin/editor/${ rowId }`}>
       <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
     </Link>
   </div>
@@ -53,6 +54,9 @@ const ArticleManagerPage = async ({ params }) => {
         <div className="flex gap-2 items-center">
           <label>Visibility:</label>
           { edPublishDate ? <StatusPublic /> : <StatusPrivate /> }
+        </div>
+        <div className="flex justify-end">
+          <WriteArticleButton editionId={Number(param.editionId)} />
         </div>
       </div>
       <ArticlesTable rowData={draftedArticle} />

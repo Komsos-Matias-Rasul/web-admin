@@ -9,7 +9,7 @@ import { PageHeader } from "@/components/PageHeader";
 
 const ActionsButtonGroup = ({ rowId }) => (
   <div className="flex gap-2">
-    <Link href={`/admin/editor/edit/${ rowId }`}>
+    <Link href={`/admin/editor/${ rowId }`}>
       <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
     </Link>
     <PublishButton rowId={rowId} />

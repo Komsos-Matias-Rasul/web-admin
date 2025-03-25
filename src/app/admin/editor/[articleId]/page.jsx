@@ -16,9 +16,9 @@ const EditArticlePage = async ({ params }) => {
     if (_res.rows.length > 0) {
       dataContent = JSON.parse(_res.rows[0].content_json)
       dataThumbnail = _res.rows[0].headline_img
-      dataTitle = _res.rows[0].title
-      dataWriter = _res.rows[0].writer_name
-      dataCategory = {currentKey: _res.rows[0].category_id}
+      dataTitle = _res.rows[0].title || ""
+      dataWriter = _res.rows[0].writer_name || ""
+      dataCategory = String(_res.rows[0].category_id)
     }
   } catch(err) {
     console.error(err)
