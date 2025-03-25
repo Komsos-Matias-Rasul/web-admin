@@ -46,8 +46,8 @@ const EditionsPage = async () => {
     }
   return (
     <>
-      <div className="w-full flex justify-between items-center mb-4">
-        <PageHeader title="Zaitun Editions Manager" />
+      <PageHeader title="Zaitun Editions Manager" />
+      <div className="w-full flex justify-end items-center my-4">
         <NewEditionModal />
       </div>
       <EditionsTable rowData={editions} />

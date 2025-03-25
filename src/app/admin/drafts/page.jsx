@@ -4,6 +4,7 @@ import Link from "next/link"
 import { Button } from "@heroui/button"
 import { AiFillEdit } from "react-icons/ai";
 import { PublishButton } from "./PublishButton";
+import { PageHeader } from "@/components/PageHeader";
 
 
 const ActionsButtonGroup = ({ rowId }) => (
@@ -42,8 +43,8 @@ const ArticlesPage = async () => {
   }
   return (
     <>
-      <div className="w-full flex justify-between items-center mb-4">
-        <h1>Drafts</h1>
+      <div className="mb-4">
+        <PageHeader title="Article Drafts" />
       </div>
       <DraftTable rowData={draftedArticle} />
     </>
