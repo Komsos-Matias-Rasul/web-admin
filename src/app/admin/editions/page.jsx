@@ -6,6 +6,7 @@ import Link from "next/link"
 import { FaCheck } from "react-icons/fa"
 import { RiBookletFill } from "react-icons/ri";
 import { PageHeader } from "@/components/PageHeader"
+import Image from "next/image"
 
 const ActionsButtonGroup = ({ editionData }) => (
   <div className="flex gap-2">
@@ -28,8 +29,8 @@ const EditionsPage = async () => {
         editions = _res.rows.map((row) => ({
           key: row.id,
           title: <p className="w-56">{row.title}</p>,
-          cover_img: row.cover_img,
-          published_at: <p>{row.published_at && new Date(row.published_at).toLocaleString('id-US', {
+          cover_img: <Image src={row.cover_img} width={100} height={0} className="w-1/2" alt="" />,
+          published_at: row.published_at && <p> { new Date(row.published_at).toLocaleString('id-US', {
             dateStyle:'medium',
           })}</p>,
           action: <ActionsButtonGroup editionData={{
