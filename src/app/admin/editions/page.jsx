@@ -5,12 +5,16 @@ import { Button } from "@heroui/button"
 import Link from "next/link"
 import { FaCheck } from "react-icons/fa"
 import { RiBookletFill } from "react-icons/ri";
+import { PageHeader } from "@/components/PageHeader"
 
 const ActionsButtonGroup = ({ editionData }) => (
   <div className="flex gap-2">
     <EditEditionInfoModal data={editionData} />
-    <Button title="Manage Articles" isIconOnly size="sm" className="bg-sky-700 text-white" startContent={<RiBookletFill size={15} />} />
-    <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+    <Button as={Link} href={`/admin/editions/${editionData.rowId}/articles`} title="Manage Articles" isIconOnly size="sm" className="bg-sky-700 text-white" startContent={<RiBookletFill size={15} />} />
+    {
+      editionData.publishedAt === null &&
+      <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+    }
   </div>
 )
 
@@ -32,7 +36,8 @@ const EditionsPage = async () => {
             rowId: row.id,
             editionTitle: row.title,
             editionYear: row.edition_year,
-            coverImg: row.cover_img
+            coverImg: row.cover_img,
+            publishedAt: row.published_at,
           }} />,
         }))
       }
@@ -42,7 +47,7 @@ const EditionsPage = async () => {
   return (
     <>
       <div className="w-full flex justify-between items-center mb-4">
-        <h1>Editions</h1>
+        <PageHeader title="Zaitun Editions Manager" />
         <NewEditionModal />
       </div>
       <EditionsTable rowData={editions} />

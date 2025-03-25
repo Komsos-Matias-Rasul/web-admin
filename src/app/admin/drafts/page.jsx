@@ -8,7 +8,7 @@ import { FaCheck } from "react-icons/fa";
 
 const ActionsButtonGroup = ({ rowId }) => (
   <div className="flex gap-2">
-    <Link href={`/admin/drafts/${ rowId }`}>
+    <Link href={`/admin/editor/edit/${ rowId }`}>
       <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
     </Link>
     <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
@@ -44,7 +44,6 @@ const ArticlesPage = async () => {
     <>
       <div className="w-full flex justify-between items-center mb-4">
         <h1>Drafts</h1>
-        <Button as={Link} href="/admin/drafts/write" radius="sm">Write Article</Button>
       </div>
       <DraftTable rowData={draftedArticle} />
     </>

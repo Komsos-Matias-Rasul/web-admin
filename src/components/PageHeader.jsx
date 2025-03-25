@@ -1,0 +1,1 @@
+export const PageHeader = ({ title }) => <h1 className="text-4xl font-bold text-neutral-600 pb-4 border-b-1.5 border-neutral-200">{title}</h1>
