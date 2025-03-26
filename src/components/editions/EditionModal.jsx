@@ -64,7 +64,7 @@ export const NewEditionModal = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Edit Edition Info</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Create New Edition</ModalHeader>
               <form onReset={handleReset} onSubmit={handleSubmit}>
                 <ModalBody>
                     <Input value={editionTitle} onValueChange={setEditionTitle} label="title" />
@@ -125,7 +125,7 @@ export const EditEditionInfoModal = ({ data }) => {
           {(onClose) => (
             <>
             
-              <ModalHeader className="flex flex-col gap-1">Create New Edition</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Edit Edition Info</ModalHeader>
               <form onReset={handleReset} onSubmit={handleSubmit}>
                 <ModalBody>
                     <Input value={editionTitle} onValueChange={setEditionTitle} label="title" />
