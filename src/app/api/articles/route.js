@@ -2,8 +2,6 @@ import { getDB } from "@/lib/db"
 import { NextResponse } from "next/server"
 
 export const GET = async (req, res) => {
-  const path = req.nextUrl.pathname.split('/')
-  const slug = path[path.length - 1]
   const db = getDB()
   try {
     const article = await db.query(`

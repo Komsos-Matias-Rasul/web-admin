@@ -1,6 +1,7 @@
 import { getDB } from "@/lib/db"
 import WriteArticle from "@/components/WriteArticle"
 import { Button } from "@heroui/button"
+import { ArchiveArticleButton, DeleteArticleButton } from "@/components/articleManager/ArticleButtons"
 
 const EditArticlePage = async ({ params }) => {
   const db = getDB()
@@ -36,17 +37,17 @@ const EditArticlePage = async ({ params }) => {
         />
       <div className="flex flex-col gap-2">
         <div className="border border-rose-600 bg-rose-600/20 rounded-lg p-3 text-rose-700">
-          <h3 className="text-xl font-semibold">Archive Article</h3>
-          <p className="">This action will tag the article as archived so it will no longer shows up in the draft neither on public. You can change this later.</p>
+          <h3 className="text-xl font-semibold">Archive</h3>
+          <p>This action will tag the article as archived so it will no longer shows up in the draft neither on public. You can change this later.</p>
           <div className="flex justify-end items-center">
-            <Button color="danger">Archive</Button>
+            <ArchiveArticleButton articleId={Number(param.articleId)} />
           </div>
         </div>
         <div className="border border-rose-600 bg-rose-600/20 rounded-lg p-3 text-rose-700">
-          <h3 className="text-xl font-semibold">Delete Article</h3>
-          <p className="">This action will permanently delete the article. This action is irreversible.</p>
+          <h3 className="text-xl font-semibold">Permanently Delete</h3>
+          <p>This action will permanently delete the article. This action is irreversible.</p>
           <div className="flex justify-end items-center">
-            <Button color="danger">Delete</Button>
+            <DeleteArticleButton articleId={Number(param.articleId)} />
           </div>
         </div>
       </div>

@@ -35,9 +35,9 @@ const columns = [
 
 export const EditionsTable = ({ rowData }) => {
   return (
-    <Table isStriped aria-label="Example table with dynamic content">
+    <Table isStriped>
       <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+        {(column) => <TableColumn key={column.key} className="text-center">{column.label}</TableColumn>}
       </TableHeader>
       <TableBody emptyContent="Article Done. Me go home :3" items={rowData}>
         {(item) => (

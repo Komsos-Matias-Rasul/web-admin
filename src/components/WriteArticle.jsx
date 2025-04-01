@@ -62,9 +62,6 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
       <>
         <h1 className="text-3xl font-semibold text-neutral-500">Hi, Eolia! 👋</h1>
         <div className="flex justify-end items-center gap-4 mb-4">
-          <button className="border-2 border-rose-500 px-3 py-1.5 rounded-lg text-rose-500 hover:bg-rose-500 hover:text-white transition-colors">
-            Discard
-          </button>
           <button onClick={() => handleSubmit({
             title: articleTitle,
             writer: articleWriter,

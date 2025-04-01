@@ -40,7 +40,7 @@ const EditionsPage = async () => {
             coverImg: row.cover_img,
             publishedAt: row.published_at,
           }} />,
-          status: row.id === row.active_edition && <div className="flex justify-center"><div className="text-white bg-sky-500 rounded-lg p-1.5 w-fit" title="currently active"><FiEye size={20} /></div></div>
+          status: row.id === row.active_edition && <div className="flex justify-center"><div className="text-sky-400 flex items-center p-1 bg-sky-500/25 border border-sky-500 rounded-lg w-fit gap-1" title="currently active"><FiEye size={15} /><label>Active</label></div></div>
         }))
       }
     } catch(err) {

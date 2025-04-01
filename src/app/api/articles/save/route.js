@@ -9,6 +9,7 @@ const formatTitleToSlug = (title) => {
     .replace(/\s+/g, '-')
 }
 
+// TODO: article content saving must be independent to metadata
 export const POST = async (req, res) => {
   const data = await req.json()
   const slug = formatTitleToSlug(data.title)
