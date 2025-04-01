@@ -13,7 +13,7 @@ export const DELETE = async (req, res) => {
     }
     queryResponse = await db.query(`
       UPDATE articles
-      SET archived_date = $1
+      SET archived_date = $1, published_date = null
       WHERE id = $2
       RETURNING 1`, [new Date().toISOString(), Number(articleId)])
     if (queryResponse.rows.length < 1) {
