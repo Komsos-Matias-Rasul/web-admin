@@ -12,17 +12,9 @@ import { Button } from "@heroui/button"
 import { Input } from "@heroui/input"
 import { useState } from "react"
 import ThumbnailUploader from "../ThumbnailUploader"
-import { createNewEditionHandler, updateEditionInfoHandler } from "@/actions/edition"
+import { publishEdition, updateEditionInfoHandler } from "@/actions/edition"
 import { AiFillEdit } from "react-icons/ai"
-
-const createNewEdition = async (editionData) => {
-  try{
-    const res = await createNewEditionHandler(editionData)
-    console.log(res)
-  } catch (err) {
-    console.error(err)
-  }
-}
+import { FaCheck } from "react-icons/fa"
 
 const updateEditionInfo = async (editionData) => {
   try{
@@ -45,12 +37,21 @@ export const NewEditionModal = () => {
     setEditionTitle("")
     setEditionYear("")
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault()
-    createNewEdition({editionTitle, editionYear, coverImg})
-    setCoverImg(null)
-    setEditionTitle("")
-    setEditionYear("")
+    const formData = new FormData()
+    formData.append("editionTitle", editionTitle)
+    formData.append("editionYear", editionYear)
+    formData.append("thumbnail", coverImg)
+    const res = await fetch("/api/edition", {
+      method: "POST",
+      body: formData,
+    })
+    if (res.status === 200) {
+      setCoverImg(null)
+      setEditionTitle("")
+      setEditionYear("")
+    }
   }
   return (
     <>
@@ -141,6 +142,50 @@ export const EditEditionInfoModal = ({ data }) => {
                   </Button>
                 </ModalFooter>
               </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
+export const PublishEditionModal = ({ editionId }) => {
+  const {isOpen, onOpen, onOpenChange} = useDisclosure()
+  const handlePublish = async (e) => {
+    e.preventDefault();
+    try{
+      await publishEdition(editionId)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  return (
+    <>
+      <Button onPress={onOpen} title="Publish Edition" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Confirmation</ModalHeader>
+                <form onSubmit={handlePublish}>
+                  <ModalBody>
+                    <p>This action will make Zaitun edition visible by public and replace current active edition. Are you sure?</p>
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button type="reset" color="danger" variant="light" onPress={onClose}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" color="primary" onPress={onClose}>
+                      Yes, Publish Now
+                    </Button>
+                  </ModalFooter>
+                </form>
             </>
           )}
         </ModalContent>

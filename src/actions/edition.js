@@ -14,7 +14,7 @@ const storeImage = async (imgFormData, editionId) => {
     const compressedBuffer = await sharp(buffer).webp({ quality: 60 }).toBuffer()
     const imgUrl = await imgUploader(compressedBuffer)
     const pool = getDB()
-    const res = await pool.query(`
+    await pool.query(`
         UPDATE editions
         SET cover_img = $1
         WHERE id = $2
@@ -24,30 +24,6 @@ const storeImage = async (imgFormData, editionId) => {
     console.error(err)
     return err
   }
-}
-
-export const createNewEditionHandler = async (editionData) => {
-  const {editionTitle, editionYear, coverImg} = editionData
-  const conn = getDB()
-  return new Promise(async(resolve, reject) => {
-    try {
-      let res = await conn.query(`
-        INSERT INTO editions(title, edition_year, created_at)
-        VALUES ($1, $2, $3)
-        RETURNING id`, [editionTitle, editionYear, new Date().toISOString()])
-      if (res.rowCount > 0) {
-        res = await storeImage(coverImg, res.rows[0].id)
-        resolve("Edition created successfully")
-      }
-      else{
-        reject("Failed to insert edition")
-      }
-    }
-    catch (err) {
-      console.error(err)
-      reject(err.message)
-    }
-  })
 }
 
 export const updateEditionInfoHandler = async (editionData) => {
@@ -68,6 +44,34 @@ export const updateEditionInfoHandler = async (editionData) => {
       else {
         reject("Failed to update edition")
       }
+    }
+    catch (err) {
+      console.error(err)
+      reject(err)
+    }
+  })
+}
+
+export const publishEdition = async (editionId) => {
+  const conn = getDB()
+  return new Promise(async (resolve, reject) => {
+    try {
+      let res = await conn.query(`
+        UPDATE active_edition ae
+        SET edition_id = $1
+        RETURNING 1`, [editionId])
+      if (res.rowCount < 1) {
+        reject("Failed to update edition")
+      }
+      res = await conn.query(`
+        UPDATE editions e
+        SET published_at = $1
+        WHERE id = $2
+        RETURNING 1`, [new Date().toISOString(), editionId])
+      if (res.rowCount < 1) {
+        reject("Failed to update edition")
+      }
+      resolve("Edition published successfully")
     }
     catch (err) {
       console.error(err)
