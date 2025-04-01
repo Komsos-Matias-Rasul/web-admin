@@ -5,7 +5,7 @@ const nextConfig = {
       {
         source: "/",
         destination: "/admin/editions",
-        permanent: true,
+        permanent: false,
       },
     ]
   },

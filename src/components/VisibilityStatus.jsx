@@ -1,2 +1,3 @@
 export const StatusPublic = () => <p className="border border-emerald-400 bg-emerald-400/25 text-emerald-500 px-4 rounded-md">Public</p>
 export const StatusPrivate = () => <p className="border border-amber-400 bg-amber-400/25 text-amber-500 px-4 rounded-md">Private</p>
+export const StatusActive = () => <p className="border border-sky-400 bg-sky-400/25 text-sky-500 px-4 rounded-md">Active</p>

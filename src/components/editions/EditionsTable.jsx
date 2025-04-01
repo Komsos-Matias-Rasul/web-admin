@@ -27,6 +27,10 @@ const columns = [
     key: "action",
     label: "ACTION",
   },
+  {
+    key: "status",
+    label: "STATUS",
+  }
 ];
 
 export const EditionsTable = ({ rowData }) => {

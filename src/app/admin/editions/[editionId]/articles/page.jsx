@@ -1,6 +1,6 @@
 import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
-import { StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
+import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { getDB } from "@/lib/db"
 import { Button } from "@heroui/button"
 import Link from "next/link"
@@ -22,16 +22,20 @@ const ArticleManagerPage = async ({ params }) => {
   let draftedArticle = []
   let edPublishDate
   let edTitle
+  let isActive
   try{
     let res = await db.query(`
       SELECT a.id, a.title, writer_name, c.label as category, a.published_date,
-      e.published_at as ed_publish_date, e.title as ed_title
-      FROM articles a 
+      e.published_at as ed_publish_date, e.title as ed_title,
+      ae.edition_id as active_edition, e.id as edition_id
+      FROM active_edition ae, articles a 
       JOIN categories c ON c.id=a.category_id 
       JOIN editions e on e.id= a.edition_id 
       WHERE a.edition_id = $1`, [Number(param.editionId)])
     if (res.rowCount > 0){
       edPublishDate = res.rows[0].ed_publish_date
+      isActive = res.rows[0].active_edition === res.rows[0].edition_id
+      console.log(res.rows[0].id)
       edTitle = res.rows[0].ed_title
       draftedArticle = res.rows.map((row) => ({
         key: row.id,
@@ -54,6 +58,7 @@ const ArticleManagerPage = async ({ params }) => {
         <div className="flex gap-2 items-center">
           <label>Visibility:</label>
           { edPublishDate ? <StatusPublic /> : <StatusPrivate /> }
+          { isActive && <StatusActive /> }
         </div>
         <div className="flex justify-end">
           <WriteArticleButton editionId={Number(param.editionId)} />

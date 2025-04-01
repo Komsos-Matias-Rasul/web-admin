@@ -1,9 +1,9 @@
 import { EditionsTable } from "@/components/editions/EditionsTable"
-import { EditEditionInfoModal, NewEditionModal } from "@/components/editions/EditionModal"
+import { EditEditionInfoModal, NewEditionModal, PublishEditionModal } from "@/components/editions/EditionModal"
 import { getDB } from "@/lib/db"
 import { Button } from "@heroui/button"
 import Link from "next/link"
-import { FaCheck } from "react-icons/fa"
+import { FiEye } from "react-icons/fi";
 import { RiBookletFill } from "react-icons/ri";
 import { PageHeader } from "@/components/PageHeader"
 import Image from "next/image"
@@ -14,7 +14,7 @@ const ActionsButtonGroup = ({ editionData }) => (
     <Button as={Link} href={`/admin/editions/${editionData.rowId}/articles`} title="Manage Articles" isIconOnly size="sm" className="bg-sky-700 text-white" startContent={<RiBookletFill size={15} />} />
     {
       editionData.publishedAt === null &&
-      <Button title="Publish" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+      <PublishEditionModal editionId={editionData.rowId} />
     }
   </div>
 )
@@ -24,7 +24,7 @@ const EditionsPage = async () => {
     let editions = []
     try{
       const _res = await db.query(`
-        SELECT id, title, cover_img, published_at, edition_year FROM editions ORDER BY created_at DESC;`)
+        SELECT id, title, cover_img, published_at, edition_year, edition_id as active_edition FROM editions, active_edition ORDER BY created_at DESC;`)
       if (_res.rows.length > 0){
         editions = _res.rows.map((row) => ({
           key: row.id,
@@ -40,6 +40,7 @@ const EditionsPage = async () => {
             coverImg: row.cover_img,
             publishedAt: row.published_at,
           }} />,
+          status: row.id === row.active_edition && <div className="flex justify-center"><div className="text-white bg-sky-500 rounded-lg p-1.5 w-fit" title="currently active"><FiEye size={20} /></div></div>
         }))
       }
     } catch(err) {
