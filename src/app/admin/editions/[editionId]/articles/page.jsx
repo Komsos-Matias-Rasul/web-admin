@@ -35,7 +35,6 @@ const ArticleManagerPage = async ({ params }) => {
     if (res.rowCount > 0){
       edPublishDate = res.rows[0].ed_publish_date
       isActive = res.rows[0].active_edition === res.rows[0].edition_id
-      console.log(res.rows[0].id)
       edTitle = res.rows[0].ed_title
       draftedArticle = res.rows.map((row) => ({
         key: row.id,
