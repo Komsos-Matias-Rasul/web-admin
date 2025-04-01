@@ -20,7 +20,7 @@ export const DELETE = async (req, res) => {
     }
     return NextResponse.json("article deleted successfully", {status: 202})
   } catch (err) {
-    console.error('Error:', err)
+    console.error(err)
     return NextResponse.json({error: err.message}, {status: 500})
   }
 }
