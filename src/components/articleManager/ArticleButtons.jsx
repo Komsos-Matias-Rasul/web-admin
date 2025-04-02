@@ -66,5 +66,4 @@ export const DeleteArticleButton = ({ articleId }) => {
       </ConfirmModal>
     </>
   )
-
 }

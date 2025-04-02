@@ -1,5 +1,4 @@
 'use client'
-import ThumbnailUploader from "@/components/ThumbnailUploader";
 import { Button } from "@heroui/button";
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
 import { useState } from "react";
@@ -51,11 +50,9 @@ const handleSubmit = async ({title, thumbnail, category, content, writer}) => {
 
 }
 
-const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dataWriter="", dataCategory}) => {
+const WriteArticle = ({categories, dataContent, dataThumbnail, dataCategory}) => {
   const [data, setData] = useState(dataContent)
   const [thumbnail, setThumbnail] = useState(dataThumbnail)
-  const [articleTitle, setArticleTitle] = useState(dataTitle)
-  const [articleWriter, setArticleWriter] = useState(dataWriter)
   const [selectedCategory, setSelectedCategory] = useState(dataCategory)
 
   return (

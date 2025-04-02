@@ -3,10 +3,10 @@ import { Button } from '@heroui/button';
 import { useState } from 'react';
 import { FiUploadCloud } from "react-icons/fi";
 
-
-export const ImageInput = () => {
+// TODO: handle upload image to cloud storage. Provide the API first T_T
+export const ImageInput = ({img, setImg}) => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(img);
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -64,7 +64,7 @@ export const ImageInput = () => {
 };
 
 
-
+// legacy
 const ThumbnailUploader = ({thumbnail, setThumbnail}) => {
   const [previewUrl, setPreviewUrl] = useState(thumbnail);
 
