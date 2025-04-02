@@ -10,7 +10,7 @@ const handleArchive = async (articleId, r) => {
     await fetch(`/api/articles/archive/${articleId}`, {
       method: 'DELETE',
     })
-    r.back()
+    r.refresh()
   }
   catch (err) {
     console.error(err)

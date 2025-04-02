@@ -1,7 +1,9 @@
 import { getDB } from "@/lib/db"
 import WriteArticle from "@/components/WriteArticle"
 import { Button } from "@heroui/button"
+import { FiSettings } from "react-icons/fi";
 import { ArchiveArticleButton, DeleteArticleButton } from "@/components/articleManager/ArticleButtons"
+import { ImageInput } from "@/components/ThumbnailUploader";
 
 const EditArticlePage = async ({ params }) => {
   const db = getDB()
@@ -11,7 +13,7 @@ const EditArticlePage = async ({ params }) => {
   }
   let dataContent, dataThumbnail, dataTitle, dataWriter, dataCategory
   try{
-    categories = await db.query("SELECT * FROM categories ORDER BY id;")
+    categories = await db.query("SELECT * FROM categories WHERE edition_id = (select edition_id FROM articles a WHERE a.id = $1 ) OR categories.id=1 ORDER BY id", [Number(param.articleId)])
     const _res = await db.query(`
       SELECT title, writer_name, headline_img, content_json, category_id FROM articles
       WHERE articles.id = $1`, [Number(param.articleId)])
@@ -27,6 +29,35 @@ const EditArticlePage = async ({ params }) => {
   }
   return (
     <main>
+      <div>
+        <div className="flex w-full items-end gap-4">
+          <div className="w-3/5 shrink-0">
+            <div className="bg-white p-4 rounded-lg shadow-lg border space-y-2">
+              <Button startContent={<FiSettings />}>Settings</Button>
+              <h1 className="text-lg font-semibold">Basic Information</h1>
+              <div className="flex">
+                <label className="w-1/3 shrink-0">Title</label>
+                <p><span className="select-none">: </span>{dataTitle}</p>
+              </div>
+              <div className="flex">
+                <label className="w-1/3 shrink-0">Writer</label>
+                <p><span className="select-none">: </span>{dataWriter}</p>
+              </div>
+              <div className="flex">
+                <label className="w-1/3 shrink-0">Category</label>
+                <p><span className="select-none">: </span>{categories.rows.filter((item) => item.id === Number(dataCategory))[0].label}</p>
+              </div>
+              <div className="flex">
+                <label className="w-1/3 shrink-0">Status</label>
+                <p><span className="select-none">: </span>PUBLISHED | DRAFT | ARCHIVED</p>
+              </div>
+            </div>
+          </div>
+          <div className="w-full">
+            <ImageInput />
+          </div>
+        </div>
+      </div>
       <WriteArticle
         categories={categories.rows}
         dataContent={dataContent}

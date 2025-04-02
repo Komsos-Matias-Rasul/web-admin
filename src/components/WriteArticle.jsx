@@ -60,7 +60,6 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
 
   return (
       <>
-        <h1 className="text-3xl font-semibold text-neutral-500">Hi, Eolia! 👋</h1>
         <div className="flex justify-end items-center gap-4 mb-4">
           <button onClick={() => handleSubmit({
             title: articleTitle,
@@ -72,25 +71,7 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
             Save Draft
           </button>
         </div>
-        <div className="flex gap-2 items-center mb-4">
-          <label>Title:<span className="text-rose-500">*</span></label>
-          <input
-            type="text"
-            name="title"
-            value={articleTitle}
-            onChange={(e) => setArticleTitle(e.target.value)}
-            className="bg-white px-4 py-2 focus:outline-none w-full rounded-lg shadow-lg" placeholder="Add title here"/>
-        </div>
-        <div className="flex gap-2 items-center mb-4">
-          <label>Writer:<span className="text-rose-500">*</span></label>
-          <input
-            type="text"
-            name="writer"
-            value={articleWriter}
-            onChange={(e) => setArticleWriter(e.target.value)}
-            className="bg-white px-4 py-2 focus:outline-none w-1/2 rounded-lg shadow-lg" placeholder="Enter writer name"/>
-        </div>
-        <div className="flex gap-2 items-center mb-4">
+        {/* <div className="flex gap-2 items-center mb-4">
           <label>Category:<span className="text-rose-500">*</span></label>
           <Dropdown>
             <DropdownTrigger>
@@ -98,7 +79,7 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
               >
                 {
                   selectedCategory.currentKey ? categories.filter(c => c.id === Number(selectedCategory.currentKey))[0].label :
-                  categories.filter(c => c.id === Number(selectedCategory))[0].label
+                  categories.filter(c => c.id === Number(selectedCategory))[0]?.label || "Uncategorized"
                 }
               </Button>
             </DropdownTrigger>
@@ -113,10 +94,10 @@ const WriteArticle = ({categories, dataContent, dataThumbnail, dataTitle="", dat
               }
             </DropdownMenu>
           </Dropdown>
-        </div>
-        <div className="mb-4">
+        </div> */}
+        {/* <div className="mb-4">
           <ThumbnailUploader thumbnail={thumbnail} setThumbnail={setThumbnail}/>
-        </div>
+        </div> */}
         <div className="bg-white rounded-lg shadow-lg px-16 py-4 w-full mb-8">
           <Editor data={data} onChange={setData} editorBlock="editorjs-container"/>
         </div>
