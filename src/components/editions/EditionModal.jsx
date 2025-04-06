@@ -125,7 +125,6 @@ export const EditEditionInfoModal = ({ data }) => {
         <ModalContent>
           {(onClose) => (
             <>
-            
               <ModalHeader className="flex flex-col gap-1">Edit Edition Info</ModalHeader>
               <form onReset={handleReset} onSubmit={handleSubmit}>
                 <ModalBody>

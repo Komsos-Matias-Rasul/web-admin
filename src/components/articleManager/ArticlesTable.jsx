@@ -16,7 +16,7 @@ const columns = [
     label: "TITLE",
   },
   {
-    key: "writer_name",
+    key: "writer",
     label: "WRITER",
   },
   {
