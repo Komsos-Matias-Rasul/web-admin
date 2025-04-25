@@ -21,8 +21,9 @@ const ArticlesPage = async () => {
   let draftedArticle = []
   try{
     const _res = await db.query(`
-      SELECT articles.id, title, writer_name, c.label as category, updated_at FROM articles
+      SELECT articles.id, title, w.writer_name, c.label as category, updated_at FROM articles
       JOIN categories c ON c.id=articles.category_id
+      JOIN writers w ON w.id=articles.writer_id
       WHERE published_date is null;`)
     if (_res.rows.length > 0){
       draftedArticle = _res.rows.map((row) => ({
