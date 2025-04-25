@@ -23,13 +23,13 @@ export const GET = async (req) => {
 
   try {
     const bucket = storage.bucket(bucketName)
-    const file = bucket.file(`zaitun/${editionYear}/${editionTitle}/${fileName}`)
+    const file = bucket.file(`zaitun/editions/${editionYear}/${editionTitle}/${fileName}`)
     blob = await file.download()
     const meta = await file.getMetadata()
     contentType = meta[0].contentType
   } catch (err) {
     if (err.code === 404) {
-      console.error("file not found:", `zaitun/${editionYear}/${editionTitle}/${fileName}`)
+      console.error("file not found:", `zaitun/editions/${editionYear}/${editionTitle}/${fileName}`)
       return NextResponse.json("no such file", { status: 404 })
     }
     console.error(err)

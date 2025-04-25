@@ -33,8 +33,8 @@ export const POST = async (req, res) => {
   try {
     const displayBuffer = await sharp(buffer).png({quality: 80}).toBuffer()
     const thumbnailBuffer = await sharp(buffer).resize(500).webp({quality: 50}).toBuffer()
-    const displayImgUrl = await uploadImgToCloudStorage(displayBuffer, `zaitun/${editionYear}/${slug}/${slug}.png`)
-    const thumbnailImgUrl = await uploadImgToCloudStorage(thumbnailBuffer, `zaitun/${editionYear}/${slug}/${slug}_thumb.webp`)
+    const displayImgUrl = await uploadImgToCloudStorage(displayBuffer, `zaitun/editions/${editionYear}/${slug}/${slug}.png`)
+    const thumbnailImgUrl = await uploadImgToCloudStorage(thumbnailBuffer, `zaitun/editions/${editionYear}/${slug}/${slug}_thumb.webp`)
 
     const queryResult = await pool.query(`
       INSERT INTO editions(title, created_at, edition_year, cover_img, thumbnail_img)
