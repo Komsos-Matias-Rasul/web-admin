@@ -26,7 +26,7 @@ export const uploadImgToCloudStorage = (buffer, fileName) => {
       })
 
       stream.end(buffer)
-      resolve(`/api/img?title=${fileName}`)
+      resolve(`/api/img/${fileName}`)
     } catch (err) {
       reject(err)
     }
