@@ -23,6 +23,8 @@
     "@heroui/system": "2.4.11",
     "@heroui/table": "^2.2.14",
     "@heroui/theme": "2.4.11",
+    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "framer-motion": "^11.12.0",
     "next": "15.0.3",
     "pg": "^8.13.1",
