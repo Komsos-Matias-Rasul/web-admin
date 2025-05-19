@@ -31,7 +31,7 @@ export const createArticle = async (editionId) => {
     const res = await conn.query(
       `
       INSERT INTO articles (edition_id, title, category_id, writer_id, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
       `, [Number(editionId), 'Untitled Article', UNCATEGORIZED, UNKNOWN_WRITER, t, t])
     if (res.rowCount > 0) {
