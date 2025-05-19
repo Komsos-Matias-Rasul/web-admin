@@ -16,20 +16,17 @@ export const PLUGINS = {
   image: {
     class: ImageTool,
     config: {
-      // endpoints: {
-      //   byFile: '/api/img/save'
-      // }
       uploader: {
         uploadByFile(file) {
           const formData = new FormData()
           formData.append("image", file)
+          formData.append("uploadType", "articleContent")
+          const articleId = window.location.pathname.split("/")[3]
+          formData.append("articleId", articleId)
           return new Promise(async (resolve, reject) => {
             try{
-              const res = await fetch("/api/img/save", {
+              const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/img/save`, {
                 method: "POST",
-                // headers: {
-                //   "Content-Type": "multipart/form-data"
-                // },
                 body: formData,
               })
               const jsonData = await res.json()

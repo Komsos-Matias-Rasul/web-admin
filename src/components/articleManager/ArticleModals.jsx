@@ -10,10 +10,8 @@ const handleSubmit = async ( titleData, categoryData, writerData, IDData ) => {
     alert("Please fill out the required fields")
     return
   }
-
-
   try {
-    const res = await fetch("/api/articles/saveTWC", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/saveTWC`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

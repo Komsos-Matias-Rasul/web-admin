@@ -50,9 +50,11 @@ const waitTime = (time) => {
 export const POST = async (req, res) => {
   const formData = await req.formData()
   const file = formData.get("image")
+  const referrer = formData.get("referrer")
   const arrayBuffer = await file.arrayBuffer()
   const buffer = new Uint8Array(arrayBuffer)
   let url
+  console.log("referrer:", referrer)
   
   if (!file) {
     return NextResponse.json({ error: 'No file uploaded' }, {status: 400})
@@ -61,13 +63,13 @@ export const POST = async (req, res) => {
 
   try {
     const compressedBuffer = await sharp(buffer).webp({quality: 60}).toBuffer()
-    url = await postImage(compressedBuffer, fileName)
+    // url = await postImage(compressedBuffer, fileName)
   }
   catch (err) {
     console.error('Error saving the file:', err)
     return NextResponse.json({ error: 'Error saving the file'}, {status: 500})
   }
-  await waitTime(2000)
+  // await waitTime(2000)
   return NextResponse.json({
     success: 1,
     file: {

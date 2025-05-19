@@ -3,8 +3,7 @@ import { Button } from '@heroui/button';
 import { useState } from 'react';
 import { FiUploadCloud } from "react-icons/fi";
 
-// TODO: handle upload image to cloud storage. Provide the API first T_T
-export const ImageInput = ({img, setImg}) => {
+export const ImageInput = ({img, articleId}) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(img);
 
@@ -16,6 +15,22 @@ export const ImageInput = ({img, setImg}) => {
       setPreviewUrl(imageUrl);
     }
   };
+
+  const handleUpload = async () => {
+    const formData = new FormData()
+    formData.append("image", selectedImage)
+    formData.append("uploadType", "articleCover")
+    formData.append("articleId", articleId)
+    try{
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/img/save`, {
+        method: "POST",
+        body: formData,
+      })
+    }
+    catch (err) {
+      console.error(err?.message)
+    }
+  }
 
   return (
     <div className="w-full max-w-md mx-auto p-4 border rounded-lg shadow-md bg-white">
@@ -37,7 +52,7 @@ export const ImageInput = ({img, setImg}) => {
         </div>
       )}
       {
-        selectedImage && <Button radius='full' fullWidth className='mt-2 bg-violet-500 text-white'>Upload</Button>
+        selectedImage && <Button onPress={handleUpload} radius='full' fullWidth className='mt-2 bg-violet-500 text-white'>Upload</Button>
       }
       <div className="mt-4">
         <div className="flex items-center justify-center w-full">

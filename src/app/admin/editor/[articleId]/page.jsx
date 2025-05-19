@@ -66,7 +66,7 @@ const EditArticlePage = async ({ params }) => {
           </div>
         </div>
         <div className="w-full">
-          <ImageInput img={dataThumbnail} />
+          <ImageInput img={dataThumbnail} articleId={Number(param.articleId)} />
         </div>
       </div>
       <WriteArticle
