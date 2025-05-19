@@ -21,7 +21,13 @@ const nextConfig = {
         hostname: "parokikosambi-backend.vercel.app",
         port: "",
         pathname: "/api/img/**"
-      }
+      },
+      {
+        protocol: "https",
+        hostname: "parokikosambi-backend-dev.vercel.app",
+        port: "",
+        pathname: "/api/img/**"
+      },
     ]
   }
 };
