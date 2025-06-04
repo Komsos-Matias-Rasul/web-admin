@@ -15,7 +15,7 @@ const handleSubmit = async (articleData, IDData) => {
   }
 
   try {
-    const res = await fetch("/api/articles/saveDraft", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/saveDraft`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -25,14 +25,15 @@ export const publishArticle = async (articleId) => {
 export const createArticle = async (editionId) => {
   const conn = getDB()
   const UNCATEGORIZED = 1  // id of 'Uncategorized' category in categories table
+  const UNKNOWN_WRITER = 1
   const t = new Date().toISOString()
   try {
     const res = await conn.query(
       `
-      INSERT INTO articles (edition_id, title, category_id, created_at, updated_at)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO articles (edition_id, title, category_id, writer_id, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
-      `, [Number(editionId), 'Untitled Article', UNCATEGORIZED, t, t])
+      `, [Number(editionId), 'Untitled Article', UNCATEGORIZED, UNKNOWN_WRITER, t, t])
     if (res.rowCount > 0) {
       console.log("new article created:", res.rows[0].id)
       return res.rows[0].id
