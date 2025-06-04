@@ -1,16 +1,15 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@heroui/button"
 import { Input } from "@heroui/input"
 import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal"
-import { FiSettings } from "react-icons/fi"
+import { FiSettings, FiPlus, FiX } from "react-icons/fi"
 
-const handleSubmit = async ( titleData, categoryData, writerData, IDData ) => {
+const handleSubmit = async (titleData, categoryData, writerData, IDData) => {
   if (!titleData || !categoryData || !writerData) {
     alert("Please fill out the required fields")
     return
   }
-
 
   try {
     const res = await fetch("/api/articles/saveTWC", {
@@ -18,7 +17,7 @@ const handleSubmit = async ( titleData, categoryData, writerData, IDData ) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({titleData, categoryData, writerData, IDData}),
+      body: JSON.stringify({ titleData, categoryData, writerData, IDData }),
     })
     if (!res.ok) throw new Error("Failed to save");
     const data = await res.json();
@@ -29,16 +28,82 @@ const handleSubmit = async ( titleData, categoryData, writerData, IDData ) => {
   }
 }
 
-export const SettingsModal = ({ dataID, categories, writers, dataTitle, dataWriter, dataCategory }) => {
-
+export const SettingsModal = ({ dataID, categories, writers: initialWriters, dataTitle, dataWriter, dataCategory }) => {
   const { onOpen, onOpenChange, isOpen } = useDisclosure()
+  const {
+    onOpen: onOpenAddWriter,
+    onOpenChange: onOpenChangeAddWriter,
+    isOpen: isOpenAddWriter
+  } = useDisclosure()
 
   const [articleTitle, setTitle] = useState(dataTitle)
   const [selectedWriter, setSelectedWriter] = useState(dataWriter)
   const [selectedCategory, setSelectedCategory] = useState(dataCategory)
+
+  const [writers, setWriters] = useState(initialWriters || [])
+  const [newWriterName, setNewWriterName] = useState("")
+  const [isAddingWriter, setIsAddingWriter] = useState(false)
+  const [addWriterError, setAddWriterError] = useState("")
+
+  useEffect(() => {
+    if (initialWriters) {
+      setWriters(initialWriters)
+    }
+  }, [initialWriters])
+
+  const handleAddWriter = async () => {
+    if (!newWriterName.trim()) {
+      setAddWriterError("Please enter a writer name")
+      return
+    }
+
+    setIsAddingWriter(true)
+    setAddWriterError("")
+
+    try {
+      const res = await fetch("/api/writers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ writer_name: newWriterName.trim() }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to add writer")
+      }
+
+      if (data.success) {
+        const newWriter = data.data
+        setWriters(prev => [...prev, newWriter])
+
+        setSelectedWriter(newWriter.id)
+
+        setNewWriterName("")
+        onOpenChangeAddWriter()
+
+        alert("Writer added successfully!")
+      }
+    } catch (err) {
+      console.error("Error adding writer:", err)
+      setAddWriterError(err.message || "Failed to add writer")
+    } finally {
+      setIsAddingWriter(false)
+    }
+  }
+
+  const handleCancelAddWriter = () => {
+    setNewWriterName("")
+    setAddWriterError("")
+    onOpenChangeAddWriter()
+  }
+
   return (
     <>
       <Button onPress={onOpen} startContent={<FiSettings />}>Settings</Button>
+
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
@@ -51,32 +116,52 @@ export const SettingsModal = ({ dataID, categories, writers, dataTitle, dataWrit
               <ModalHeader>Settings</ModalHeader>
               <form>
                 <ModalBody>
-                  <Input label="Title" value={articleTitle} onChange={(e) => setTitle(e.target.value)} />
+                  <Input
+                    label="Title"
+                    value={articleTitle}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+
                   <div className="mt-4">
-                    <label className="block font-medium">Writer</label>
-                    <select
-                      value={selectedWriter}
-                      onChange={(e) => setSelectedWriter(e.target.value)}
-                      className="w-full border p-2 rounded-md"
-                    >
-                      {writers && writers.length > 0 ? (
-                        writers.map((writer) => (
-                          <option key={writer.id} value={writer.id}>
-                            {writer.writer_name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="none">No writers available</option>
-                      )}
-                    </select>
+                    <label className="block font-medium mb-2">Writer</label>
+                    <div className="flex gap-2">
+                      <select
+                        value={selectedWriter}
+                        onChange={(e) => setSelectedWriter(e.target.value)}
+                        className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="">Select a writer</option>
+                        {writers && writers.length > 0 ? (
+                          writers.map((writer) => (
+                            <option key={writer.id} value={writer.id}>
+                              {writer.writer_name}
+                            </option>
+                          ))
+                        ) : (
+                          <option value="none" disabled>No writers available</option>
+                        )}
+                      </select>
+                      <Button
+                        size="sm"
+                        color="primary"
+                        variant="flat"
+                        onPress={onOpenAddWriter}
+                        startContent={<FiPlus size={16} />}
+                        className="px-3"
+                      >
+                        Add
+                      </Button>
+                    </div>
                   </div>
+
                   <div className="mt-4">
-                    <label className="block font-medium">Category</label>
+                    <label className="block font-medium mb-2">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full border p-2 rounded-md"
+                      className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
+                      <option value="">Select a category</option>
                       {categories && categories.length > 0 ? (
                         categories.map((category) => (
                           <option key={category.id} value={category.id}>
@@ -84,17 +169,18 @@ export const SettingsModal = ({ dataID, categories, writers, dataTitle, dataWrit
                           </option>
                         ))
                       ) : (
-                        <option value="none">No categories available</option>
+                        <option value="none" disabled>No categories available</option>
                       )}
                     </select>
                   </div>
-
                 </ModalBody>
+
                 <ModalFooter>
                   <Button type="reset" color="default" variant="light" onPress={onClose}>
                     Cancel
                   </Button>
-                  <button color="primary"
+                  <button
+                    type="button"
                     onClick={() => {
                       handleSubmit(
                         articleTitle,
@@ -107,9 +193,67 @@ export const SettingsModal = ({ dataID, categories, writers, dataTitle, dataWrit
                   >
                     Save
                   </button>
-
                 </ModalFooter>
               </form>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+      <Modal
+        size="sm"
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isOpenAddWriter}
+        onOpenChange={onOpenChangeAddWriter}
+      >
+        <ModalContent>
+          {() => (
+            <>
+              <ModalHeader className="flex items-center gap-2">
+                <FiPlus />
+                Add New Writer
+              </ModalHeader>
+
+              <ModalBody>
+                <Input
+                  label="Writer Name"
+                  placeholder="Enter writer name"
+                  value={newWriterName}
+                  onChange={(e) => {
+                    setNewWriterName(e.target.value)
+                    if (addWriterError) setAddWriterError("")
+                  }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter' && !isAddingWriter) {
+                      e.preventDefault()
+                      handleAddWriter()
+                    }
+                  }}
+                  isInvalid={!!addWriterError}
+                  errorMessage={addWriterError}
+                  autoFocus
+                />
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  color="default"
+                  variant="light"
+                  onPress={handleCancelAddWriter}
+                  disabled={isAddingWriter}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  onPress={handleAddWriter}
+                  isLoading={isAddingWriter}
+                  disabled={!newWriterName.trim() || isAddingWriter}
+                >
+                  {isAddingWriter ? "Adding..." : "Add Writer"}
+                </Button>
+              </ModalFooter>
             </>
           )}
         </ModalContent>
