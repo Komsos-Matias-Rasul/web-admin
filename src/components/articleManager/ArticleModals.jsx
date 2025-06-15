@@ -2,56 +2,99 @@
 import { useState, useEffect } from "react"
 import { Button } from "@heroui/button"
 import { Input } from "@heroui/input"
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@heroui/modal"
-import { FiSettings, FiPlus, FiX } from "react-icons/fi"
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure
+} from "@heroui/modal"
+import {
+  FiSettings,
+  FiPlus,
+  FiX,
+  FiCheck,
+  FiAlertCircle
+} from "react-icons/fi"
 
-const handleSubmit = async ( titleData, categoryData, writerData, IDData ) => {
+const handleSubmit = async (titleData, categoryData, writerData, IDData, setIsLoading, setMessage) => {
   if (!titleData || !categoryData || !writerData) {
-    alert("Please fill out the required fields")
-    return
+    setMessage({ type: 'error', text: 'Please fill out all required fields' })
+    return false
   }
 
+  setIsLoading(true)
+  setMessage(null)
+
   try {
-    const res = await fetch("/api/articles/saveTWC", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/saveTWC`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({titleData, categoryData, writerData, IDData}),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ titleData, categoryData, writerData, IDData }),
     })
-    if (!res.ok) throw new Error("Failed to save");
-    const data = await res.json();
-    console.log("Saved successfully:", data);
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      throw new Error(data.error || `Server error: ${res.status}`)
+    }
+
+    setMessage({ type: 'success', text: 'Article settings saved successfully!' })
+    return true
   } catch (err) {
-    console.error("Error saving article:", err);
-    return
+    console.error("Error saving article:", err)
+    setMessage({ type: 'error', text: err.message || 'Failed to save article settings' })
+    return false
+  } finally {
+    setIsLoading(false)
   }
 }
 
-export const SettingsModal = ({ dataID, categories, writers: initialWriters, dataTitle, dataWriter, dataCategory }) => {
+export const SettingsModal = ({
+  dataID,
+  categories,
+  writers: initialWriters,
+  dataTitle,
+  dataWriter,
+  dataCategory,
+  onSettingsSaved
+}) => {
   const { onOpen, onOpenChange, isOpen } = useDisclosure()
-  const { 
-    onOpen: onOpenAddWriter, 
-    onOpenChange: onOpenChangeAddWriter, 
-    isOpen: isOpenAddWriter 
+  const {
+    onOpen: onOpenAddWriter,
+    onOpenChange: onOpenChangeAddWriter,
+    isOpen: isOpenAddWriter
   } = useDisclosure()
 
   const [articleTitle, setTitle] = useState(dataTitle)
   const [selectedWriter, setSelectedWriter] = useState(dataWriter)
   const [selectedCategory, setSelectedCategory] = useState(dataCategory)
-  
-  // State for add writer functionality
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState(null)
+
   const [writers, setWriters] = useState(initialWriters || [])
   const [newWriterName, setNewWriterName] = useState("")
   const [isAddingWriter, setIsAddingWriter] = useState(false)
   const [addWriterError, setAddWriterError] = useState("")
 
-  // Update writers when initialWriters prop changes
   useEffect(() => {
-    if (initialWriters) {
-      setWriters(initialWriters)
-    }
+    setTitle(dataTitle)
+    setSelectedWriter(dataWriter)
+    setSelectedCategory(dataCategory)
+  }, [dataTitle, dataWriter, dataCategory])
+
+  useEffect(() => {
+    if (initialWriters) setWriters(initialWriters)
   }, [initialWriters])
+
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => setMessage(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [message])
 
   const handleAddWriter = async () => {
     if (!newWriterName.trim()) {
@@ -63,37 +106,25 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
     setAddWriterError("")
 
     try {
-      const res = await fetch("/api/writers", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/writers`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ writer_name: newWriterName.trim() }),
       })
 
       const data = await res.json()
 
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to add writer")
-      }
+      if (!res.ok) throw new Error(data.error || "Failed to add writer")
 
       if (data.success) {
-        // Add the new writer to the local state
         const newWriter = data.data
         setWriters(prev => [...prev, newWriter])
-        
-        // Select the newly added writer
-        setSelectedWriter(newWriter.id)
-        
-        // Reset form and close modal
+        setSelectedWriter(String(newWriter.id))
         setNewWriterName("")
         onOpenChangeAddWriter()
-        
-        // Show success message (optional)
-        alert("Writer added successfully!")
+        setMessage({ type: 'success', text: 'Writer added successfully!' })
       }
     } catch (err) {
-      console.error("Error adding writer:", err)
       setAddWriterError(err.message || "Failed to add writer")
     } finally {
       setIsAddingWriter(false)
@@ -106,47 +137,93 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
     onOpenChangeAddWriter()
   }
 
+  const handleSaveSettings = async (onClose) => {
+    const success = await handleSubmit(
+      articleTitle,
+      selectedCategory,
+      selectedWriter,
+      dataID,
+      setIsLoading,
+      setMessage
+    )
+
+    if (success) {
+      if (onSettingsSaved) {
+        onSettingsSaved({
+          title: articleTitle,
+          writer: selectedWriter,
+          category: selectedCategory
+        })
+      }
+      
+      setTimeout(() => {
+        onClose()
+      }, 1000)
+    }
+  }
+
+  const MessageAlert = ({ message }) => {
+    if (!message) return null
+    const isError = message.type === 'error'
+    return (
+      <div className={`flex items-center gap-2 p-3 rounded-lg ${
+        isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'
+      }`}>
+        {isError ? <FiAlertCircle /> : <FiCheck />}
+        <span className="text-sm">{message.text}</span>
+      </div>
+    )
+  }
+
   return (
     <>
       <Button onPress={onOpen} startContent={<FiSettings />}>Settings</Button>
-      
-      {/* Main Settings Modal */}
+
       <Modal
-        isDismissable={false}
+        isDismissable={!isLoading}
         isKeyboardDismissDisabled={true}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
+        size="lg"
       >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Settings</ModalHeader>
-              <form>
-                <ModalBody>
-                  <Input 
-                    label="Title" 
-                    value={articleTitle} 
-                    onChange={(e) => setTitle(e.target.value)} 
+              <ModalHeader>Article Settings</ModalHeader>
+              <form onSubmit={(e) => e.preventDefault()}>
+                <ModalBody className="space-y-4">
+                  <MessageAlert message={message} />
+
+                  <Input
+                    label="Title"
+                    value={articleTitle}
+                    onChange={(e) => {
+                      setTitle(e.target.value)
+                      if (message) setMessage(null)
+                    }}
+                    isDisabled={isLoading}
+                    isRequired
                   />
-                  
-                  <div className="mt-4">
-                    <label className="block font-medium mb-2">Writer</label>
+
+                  <div>
+                    <label className="block font-medium mb-2">Writer *</label>
                     <div className="flex gap-2">
                       <select
                         value={selectedWriter}
-                        onChange={(e) => setSelectedWriter(e.target.value)}
-                        className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        onChange={(e) => {
+                          setSelectedWriter(e.target.value)
+                          if (message) setMessage(null)
+                        }}
+                        disabled={isLoading}
+                        className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                        required
                       >
                         <option value="">Select a writer</option>
-                        {writers && writers.length > 0 ? (
-                          writers.map((writer) => (
-                            <option key={writer.id} value={writer.id}>
-                              {writer.writer_name}
-                            </option>
-                          ))
-                        ) : (
-                          <option value="none" disabled>No writers available</option>
-                        )}
+                        {writers.map((writer) => (
+                          <option key={writer.id} value={writer.id}>
+                            {writer.writer_name}
+                          </option>
+                        ))}
                       </select>
                       <Button
                         size="sm"
@@ -155,51 +232,52 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
                         onPress={onOpenAddWriter}
                         startContent={<FiPlus size={16} />}
                         className="px-3"
+                        isDisabled={isLoading}
                       >
                         Add
                       </Button>
                     </div>
                   </div>
-                  
-                  <div className="mt-4">
-                    <label className="block font-medium mb-2">Category</label>
+
+                  <div>
+                    <label className="block font-medium mb-2">Category *</label>
                     <select
                       value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      onChange={(e) => {
+                        setSelectedCategory(e.target.value)
+                        if (message) setMessage(null)
+                      }}
+                      disabled={isLoading}
+                      className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                      required
                     >
                       <option value="">Select a category</option>
-                      {categories && categories.length > 0 ? (
-                        categories.map((category) => (
-                          <option key={category.id} value={category.id}>
-                            {category.label}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="none" disabled>No categories available</option>
-                      )}
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                 </ModalBody>
-                
+
                 <ModalFooter>
-                  <Button type="reset" color="default" variant="light" onPress={onClose}>
+                  <Button
+                    color="default"
+                    variant="light"
+                    onPress={onClose}
+                    isDisabled={isLoading}
+                  >
                     Cancel
                   </Button>
-                  <button 
-                    type="button"
-                    onClick={() => {
-                      handleSubmit(
-                        articleTitle,
-                        selectedCategory,
-                        selectedWriter,
-                        dataID
-                      );
-                    }}
-                    className="border-2 border-sky-500 bg-sky-500 px-3 py-1.5 rounded-lg text-white hover:bg-sky-600 hover:border-sky-600 transition-colors"
+                  <Button
+                    color="primary"
+                    onPress={() => handleSaveSettings(onClose)}
+                    isLoading={isLoading}
+                    isDisabled={isLoading}
                   >
-                    Save
-                  </button>
+                    {isLoading ? "Saving..." : "Save Settings"}
+                  </Button>
                 </ModalFooter>
               </form>
             </>
@@ -207,10 +285,9 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
         </ModalContent>
       </Modal>
 
-      {/* Add Writer Modal */}
       <Modal
         size="sm"
-        isDismissable={false}
+        isDismissable={!isAddingWriter}
         isKeyboardDismissDisabled={true}
         isOpen={isOpenAddWriter}
         onOpenChange={onOpenChangeAddWriter}
@@ -222,7 +299,7 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
                 <FiPlus />
                 Add New Writer
               </ModalHeader>
-              
+
               <ModalBody>
                 <Input
                   label="Writer Name"
@@ -240,24 +317,25 @@ export const SettingsModal = ({ dataID, categories, writers: initialWriters, dat
                   }}
                   isInvalid={!!addWriterError}
                   errorMessage={addWriterError}
+                  isDisabled={isAddingWriter}
                   autoFocus
                 />
               </ModalBody>
-              
+
               <ModalFooter>
-                <Button 
-                  color="default" 
-                  variant="light" 
+                <Button
+                  color="default"
+                  variant="light"
                   onPress={handleCancelAddWriter}
-                  disabled={isAddingWriter}
+                  isDisabled={isAddingWriter}
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   color="primary"
                   onPress={handleAddWriter}
                   isLoading={isAddingWriter}
-                  disabled={!newWriterName.trim() || isAddingWriter}
+                  isDisabled={!newWriterName.trim() || isAddingWriter}
                 >
                   {isAddingWriter ? "Adding..." : "Add Writer"}
                 </Button>
