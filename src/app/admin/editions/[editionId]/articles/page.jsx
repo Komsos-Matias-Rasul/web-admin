@@ -1,7 +1,6 @@
 import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
-import { getDB } from "@/lib/db"
 import { Button } from "@heroui/button"
 import Link from "next/link"
 import { AiFillEdit } from "react-icons/ai"
@@ -18,40 +17,28 @@ const ActionsButtonGroup = ({ rowId }) => (
 // TODO: Secure page by check if the article is exists.
 const ArticleManagerPage = async ({ params }) => {
   const param = await params
-  const db = getDB()
   let draftedArticle = []
   let edPublishDate
   let edTitle
   let isActive
   try{
-    let res = await db.query(`
-      SELECT 
-        a.id, 
-        a.title, 
-        w.writer_name as writer,
-        c.label as category, 
-        a.published_date,
-        e.published_at as ed_publish_date, 
-        e.title as ed_title,
-        ae.edition_id as active_edition, 
-        e.id as edition_id
-      FROM active_edition ae, articles a 
-      JOIN categories c ON  c.id= a.category_id 
-      JOIN editions e on    e.id= a.edition_id 
-      JOIN writers w on     w.id= a.writer_id
-      WHERE a.edition_id = $1`, [Number(param.editionId)])
-    if (res.rowCount > 0){
-      edPublishDate = res.rows[0].ed_publish_date
-      isActive = res.rows[0].active_edition === res.rows[0].edition_id
-      edTitle = res.rows[0].ed_title
-      // console.log("Query Result:", res.rows)
 
-      draftedArticle = res.rows.map((row) => ({
+    const res = await fetch(`${process.env.BACKEND_URL}/api/core/editions/${Number(param.editionId)}/articles`)
+    const data = await res.json()
+    if (!res.ok){
+      throw new Error(res.statusText)
+    }
+    if (data.data.articles.length > 0){
+      edPublishDate = data.data.edition_publish_date
+      isActive = data.data.active_edition === data.data.edition_id
+      edTitle = data.data.edition_title
+
+      draftedArticle = data.data.articles.map((row) => ({
         key: row.id,
         title: <p className="">{row.title}</p>,
         writer: <p className="">{row.writer}</p>,
         category: row.category,
-        status: row.published_date ? "PUBLISHED" : "DRAFT",
+        status: row.article_published_date ? "PUBLISHED" : "DRAFT",
         action: <ActionsButtonGroup rowId={row.id} />,
       }))
     }

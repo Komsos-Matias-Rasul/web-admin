@@ -23,27 +23,29 @@ const ActionsButtonGroup = ({ editionData }) => (
 const EditionsPage = async () => {
   const db = getDB();
   const cookieStore = cookies();
-  const userId = cookieStore.get("user_id")?.value; 
+  // const userId = cookieStore.get("user_id")?.value; 
 
   let username = [];
   let editions = [];
 
   try {
-    if (userId) {
-      const userRes = await db.query('SELECT username FROM users WHERE id = $1', [userId]);
-      if (userRes.rows.length > 0) {
-        username = userRes.rows[0].username;
-      }
-    }
+    // if (userId) {
+    //   const userRes = await db.query('SELECT username FROM users WHERE id = $1', [userId]);
+    //   if (userRes.rows.length > 0) {
+    //     username = userRes.rows[0].username;
+    //   }
+    // }
 
-    const _res = await db.query(`
-      SELECT id, title, cover_img, published_at, edition_year, edition_id as active_edition FROM editions, active_edition ORDER BY created_at DESC;`
-    );
-    if (_res.rows.length > 0){
-      editions = _res.rows.map((row) => ({
+    const _res = await fetch(`${process.env.BACKEND_URL}/api/core/editions`)
+    const data = await _res.json()
+    if (!_res.ok) {
+      throw new Error(_res.statusText)
+    }
+    if (data.data.editions.length > 0){
+      editions = data.data.editions.map((row) => ({
         key: row.id,
         title: <p className="w-56">{row.title}</p>,
-        cover_img: <Image src={row.cover_img} width={100} height={0} className="w-1/2" alt="" />,
+        thumbnail_img: <Image src={row.thumbnail_img} width={100} height={0} className="w-1/2" alt="" />,
         published_at: row.published_at && <p>{new Date(row.published_at).toLocaleString('id-US', {
           dateStyle:'medium',
         })}</p>,
@@ -54,7 +56,7 @@ const EditionsPage = async () => {
           coverImg: row.cover_img,
           publishedAt: row.published_at,
         }} />,
-        status: row.id === row.active_edition && <div className="flex justify-center"><div className="text-sky-400 flex items-center p-1 bg-sky-500/25 border border-sky-500 rounded-lg w-fit gap-1" title="currently active"><FiEye size={15} /><label>Active</label></div></div>
+        status: row.id === data.data.active_edition && <div className="flex justify-center"><div className="text-sky-400 flex items-center p-1 bg-sky-500/25 border border-sky-500 rounded-lg w-fit gap-1" title="currently active"><FiEye size={15} /><label>Active</label></div></div>
       }))
     }
   } catch(err) {
