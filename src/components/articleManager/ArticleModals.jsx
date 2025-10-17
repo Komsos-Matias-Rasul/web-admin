@@ -18,20 +18,27 @@ import {
   FiAlertCircle
 } from "react-icons/fi"
 
-const handleSubmit = async (titleData, categoryData, writerData, IDData, setIsLoading, setMessage) => {
-  if (!titleData || !categoryData || !writerData) {
+const handleSubmit = async (title, category, writer, id, setIsLoading, setMessage) => {
+  if (!title || !category || !writer) {
     setMessage({ type: 'error', text: 'Please fill out all required fields' })
     return false
+  }
+
+  const reqData = {
+    title,
+    category: Number(category),
+    writer: Number(category),
+    id: Number(id)
   }
 
   setIsLoading(true)
   setMessage(null)
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/articles/saveTWC`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/saveTWC`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ titleData, categoryData, writerData, IDData }),
+      body: JSON.stringify(reqData),
     })
 
     const data = await res.json()
@@ -106,7 +113,7 @@ export const SettingsModal = ({
     setAddWriterError("")
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/writers`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/writers`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ writer_name: newWriterName.trim() }),

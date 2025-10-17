@@ -1,4 +1,3 @@
-import { getDB } from "@/lib/db"
 import { DraftTable } from "@/components/draft/DraftTable"
 import Link from "next/link"
 import { Button } from "@heroui/button"
@@ -17,16 +16,15 @@ const ActionsButtonGroup = ({ rowId }) => (
 )
 
 const ArticlesPage = async () => {
-  const db = getDB()
   let draftedArticle = []
   try{
-    const _res = await db.query(`
-      SELECT articles.id, title, w.writer_name, c.label as category, updated_at FROM articles
-      JOIN categories c ON c.id=articles.category_id
-      JOIN writers w ON w.id=articles.writer_id
-      WHERE published_date is null;`)
-    if (_res.rows.length > 0){
-      draftedArticle = _res.rows.map((row) => ({
+    const res = await fetch(`${process.env.BACKEND_URL}/api/core/drafts`)
+    if (!res.ok){
+      throw new Error(res.statusText)
+    }
+    const draftData = await res.json()
+    if (draftData.data.length > 0){
+      draftedArticle = draftData.data.map((row) => ({
         key: row.id,
         title: <p className="w-56">{row.title}</p>,
         writer_name: row.writer_name,

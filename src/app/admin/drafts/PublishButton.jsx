@@ -6,7 +6,7 @@ import { FaCheck } from "react-icons/fa";
 
 const handlePublish = async (articleId, r) => {
   try {
-    const res = await fetch(`/api/articles/publish/${Number(articleId)}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/publish/${Number(articleId)}`, {
       method: 'POST',
     })
     if (res.status === 202) {

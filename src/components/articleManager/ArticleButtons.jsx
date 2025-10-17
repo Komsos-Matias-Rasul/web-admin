@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation"
 
 const handleArchive = async (articleId, r) => {
   try {
-    await fetch(`/api/articles/archive/${articleId}`, {
-      method: 'DELETE',
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${articleId}/archive`, {
+      method: 'PUT',
     })
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
     r.refresh()
   }
   catch (err) {
@@ -20,9 +23,12 @@ const handleArchive = async (articleId, r) => {
 
 const handleDelete = async (articleId, r) => {
   try {
-    await fetch(`/api/articles/delete/${articleId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${articleId}`, {
       method: 'DELETE',
     })
+    if (!res.ok) {
+      throw new Error(res.statusText)
+    }
     r.back()
   } catch (err) {
     console.error(err)

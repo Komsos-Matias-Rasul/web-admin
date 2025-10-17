@@ -7,26 +7,26 @@ const EditArticlePage = async ({ params }) => {
   let dataContent, dataThumbnail, dataTitle, dataWriter, dataCategory, dataID
 
   try {
-    let res = await fetch(`${process.env.BACKEND_URL}/api/core/categories/by-article?article=${Number(param.articleId)}`)
+    let res = await fetch(`${process.env.BACKEND_URL}/api/core/categories/by-article/${Number(param.articleId)}`)
     if (!res.ok) {
       throw new Error(res.statusText)
     }
-    const categoryData = await res.json()
-    categories = categoryData.data
+    let jsonData = await res.json()
+    categories = jsonData.data
 
     res = await fetch(`${process.env.BACKEND_URL}/api/core/writers`)
     if (!res.ok) {
       throw new Error(res.statusText)
     }
-    const writerData = await res.json()
-    writers = writerData.data
+    jsonData = await res.json()
+    writers = jsonData.data
     
     res = await fetch(`${process.env.BACKEND_URL}/api/core/articles/${Number(param.articleId)}`)
     if (!res.ok) {
       throw new Error(res.statusText)
     }
-    const articleData = await res.json()
-    const article = articleData.data
+    jsonData = await res.json()
+    const article = jsonData.data
     dataID = Number(param.articleId)
     dataContent = JSON.parse(article.content_json)
     dataThumbnail = article.headline_img

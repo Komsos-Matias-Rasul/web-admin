@@ -17,16 +17,16 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "parokikosambi-backend.vercel.app",
-        port: "",
+        protocol: "http",
+        hostname: "localhost",
+        port: "8080",
         pathname: "/api/img/**"
       },
       {
         protocol: "https",
-        hostname: "parokikosambi-backend-dev.vercel.app",
+        hostname: "storage.googleapis.com",
         port: "",
-        pathname: "/api/img/**"
+        pathname: "/**"
       },
     ]
   }

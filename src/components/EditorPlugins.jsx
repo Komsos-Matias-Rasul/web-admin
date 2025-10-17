@@ -20,12 +20,10 @@ export const PLUGINS = {
         uploadByFile(file) {
           const formData = new FormData()
           formData.append("image", file)
-          formData.append("uploadType", "articleContent")
           const articleId = window.location.pathname.split("/")[3]
-          formData.append("articleId", articleId)
           return new Promise(async (resolve, reject) => {
             try{
-              const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/img/save`, {
+              const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/img/save?articleId=${articleId}`, {
                 method: "POST",
                 body: formData,
               })
