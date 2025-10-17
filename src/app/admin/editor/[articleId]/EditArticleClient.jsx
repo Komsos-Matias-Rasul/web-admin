@@ -60,14 +60,13 @@ const EditArticleClient = ({ initialData }) => {
           </div>
         </div>
         <div className="w-full">
-          <ImageInput img={initialData?.dataThumbnail} articleId={initialData?.dataID} />
+          <ImageInput img={initialData?.dataThumbnail ? (process.env.NEXT_PUBLIC_GCLOUD_PREFIX + initialData?.dataThumbnail) : null} articleId={initialData?.dataID} />
         </div>
       </div>
       <WriteArticle
         dataID={initialData?.dataID}
         categories={initialData?.categories}
         dataContent={initialData?.dataContent}
-        dataThumbnail={initialData?.dataThumbnail}
         dataTitle={currentTitle}
         dataWriter={currentWriter}
         dataCategory={currentCategory}

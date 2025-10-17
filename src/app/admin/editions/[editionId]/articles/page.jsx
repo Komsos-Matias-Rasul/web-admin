@@ -1,60 +1,23 @@
 import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
-import { getDB } from "@/lib/db"
-import { Button } from "@heroui/button"
-import Link from "next/link"
-import { AiFillEdit } from "react-icons/ai"
 import { WriteArticleButton } from "./WriteArticleButton"
-
-const ActionsButtonGroup = ({ rowId }) => (
-  <div className="flex gap-2">
-    <Link href={`/admin/editor/${ rowId }`}>
-      <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
-    </Link>
-  </div>
-)
 
 // TODO: Secure page by check if the article is exists.
 const ArticleManagerPage = async ({ params }) => {
   const param = await params
-  const db = getDB()
-  let draftedArticle = []
   let edPublishDate
   let edTitle
   let isActive
   try{
-    let res = await db.query(`
-      SELECT 
-        a.id, 
-        a.title, 
-        w.writer_name as writer,
-        c.label as category, 
-        a.published_date,
-        e.published_at as ed_publish_date, 
-        e.title as ed_title,
-        ae.edition_id as active_edition, 
-        e.id as edition_id
-      FROM active_edition ae, articles a 
-      JOIN categories c ON  c.id= a.category_id 
-      JOIN editions e on    e.id= a.edition_id 
-      JOIN writers w on     w.id= a.writer_id
-      WHERE a.edition_id = $1`, [Number(param.editionId)])
-    if (res.rowCount > 0){
-      edPublishDate = res.rows[0].ed_publish_date
-      isActive = res.rows[0].active_edition === res.rows[0].edition_id
-      edTitle = res.rows[0].ed_title
-      // console.log("Query Result:", res.rows)
-
-      draftedArticle = res.rows.map((row) => ({
-        key: row.id,
-        title: <p className="">{row.title}</p>,
-        writer: <p className="">{row.writer}</p>,
-        category: row.category,
-        status: row.published_date ? "PUBLISHED" : "DRAFT",
-        action: <ActionsButtonGroup rowId={row.id} />,
-      }))
+    const res = await fetch(`${process.env.BACKEND_URL}/api/core/editions/${Number(param.editionId)}`)
+    const jsonData = await res.json()
+    if (!res.ok){
+      return <p>Error</p>
     }
+    edPublishDate = jsonData.data.published_at
+    isActive = jsonData.data.active_edition === jsonData.data.id
+    edTitle = jsonData.data.title
   } catch(err) {
     console.error(err)
   }
@@ -73,7 +36,7 @@ const ArticleManagerPage = async ({ params }) => {
           <WriteArticleButton editionId={Number(param.editionId)} />
         </div>
       </div>
-      <ArticlesTable rowData={draftedArticle} />
+      <ArticlesTable editionId={Number(param.editionId)} />
     </>
   )
 }

@@ -1,6 +1,5 @@
 "use client"
 
-import { createArticle } from "@/actions/articles"
 import { Button } from "@heroui/button"
 import { useRouter } from "next/navigation"
 
@@ -8,7 +7,12 @@ export const WriteArticleButton = ({ editionId }) => {
   const r = useRouter()
   const handleNewArticle = async () => {
     try {
-      const articleId = await createArticle(editionId)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/create/${editionId}`,
+        {
+          method: "POST"
+        })
+      const jsonData = await res.json()
+      const articleId = jsonData.data.article_id
       r.push(`/admin/editor/${articleId}`)
     } catch (err) {
       console.error(err)
@@ -16,6 +20,6 @@ export const WriteArticleButton = ({ editionId }) => {
   }
   
   return (
-    <Button onPress={() => handleNewArticle(editionId)}>Write New Article</Button>
+    <Button onPress={handleNewArticle}>Write New Article</Button>
   )
 }

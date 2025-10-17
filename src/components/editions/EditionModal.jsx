@@ -16,16 +16,6 @@ import { publishEdition, updateEditionInfoHandler } from "@/actions/edition"
 import { AiFillEdit } from "react-icons/ai"
 import { FaCheck } from "react-icons/fa"
 
-const updateEditionInfo = async (editionData) => {
-  try{
-    const res = await updateEditionInfoHandler(editionData)
-    console.log(res)
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-
 // TODO: Add confirmation modal 
 export const NewEditionModal = () => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure()
@@ -101,17 +91,30 @@ export const EditEditionInfoModal = ({ data }) => {
     setEditionTitle("")
     setEditionYear("")
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    updateEditionInfo({
-      editionTitle,
-      editionYear,
-      coverImg,
-      editionId: data.rowId
-    })
-    setCoverImg(null)
-    setEditionTitle("")
-    setEditionYear("")
+
+    try{
+      const reqBody = {
+        title: editionTitle,
+        year: Number(editionYear),
+      }
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${Number(data.rowId)}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(reqBody)
+      })
+      if (!res.ok) {
+        throw Error(res.statusText)
+      }
+
+      // TODO: implement cover update
+
+    } catch(err) {
+      console.error(err)
+    }
   }
   return (
     <>
