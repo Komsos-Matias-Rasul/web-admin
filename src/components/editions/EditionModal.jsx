@@ -16,69 +16,6 @@ import { publishEdition, updateEditionInfoHandler } from "@/actions/edition"
 import { AiFillEdit } from "react-icons/ai"
 import { FaCheck } from "react-icons/fa"
 
-// TODO: Add confirmation modal 
-export const NewEditionModal = () => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure()
-  const [editionTitle, setEditionTitle] = useState()
-  const [editionYear, setEditionYear] = useState()
-  const [coverImg, setCoverImg] = useState()
-  const handleReset = () => {
-    setCoverImg(null)
-    setEditionTitle("")
-    setEditionYear("")
-  }
-  const handleSubmit = async(e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append("editionTitle", editionTitle)
-    formData.append("editionYear", editionYear)
-    formData.append("thumbnail", coverImg)
-    const res = await fetch("/api/edition", {
-      method: "POST",
-      body: formData,
-    })
-    if (res.status === 200) {
-      setCoverImg(null)
-      setEditionTitle("")
-      setEditionYear("")
-    }
-  }
-  return (
-    <>
-      <Button radius="sm" onPress={onOpen}>Create New Edition</Button>
-      <Modal
-        isDismissable={false}
-        isKeyboardDismissDisabled={true}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Create New Edition</ModalHeader>
-              <form onReset={handleReset} onSubmit={handleSubmit}>
-                <ModalBody>
-                    <Input value={editionTitle} onValueChange={setEditionTitle} label="title" />
-                    <Input type="number" value={editionYear} onValueChange={setEditionYear} label="edition year" />
-                    <ThumbnailUploader thumbnail={coverImg} setThumbnail={setCoverImg} />
-                </ModalBody>
-                <ModalFooter>
-                  <Button type="reset" color="danger" variant="light" onPress={onClose}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" color="primary" onPress={onClose}>
-                    Submit
-                  </Button>
-                </ModalFooter>
-              </form>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
-  );
-}
-
 
 // TODO: Add confirmation modal
 export const EditEditionInfoModal = ({ data }) => {

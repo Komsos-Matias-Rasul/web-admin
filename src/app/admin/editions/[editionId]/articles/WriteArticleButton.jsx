@@ -21,7 +21,7 @@ export const WriteArticleButton = ({ editionId }) => {
   
   return (
     <button
-      className="bg-blue-primary text-white font-bold hover:bg-blue-400 active:bg-sky-700 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+      className="bg-blue-primary text-white font-bold hover:bg-blue-400 active:bg-blue-600 px-4 py-2 rounded-lg transition-colors cursor-pointer"
       aria-label="write"
       title="Write articles"
     >
