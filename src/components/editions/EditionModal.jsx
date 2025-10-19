@@ -118,7 +118,14 @@ export const EditEditionInfoModal = ({ data }) => {
   }
   return (
     <>
-      <Button onPress={onOpen} title="Update Info" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />} />
+      {/* <Button onPress={onOpen} title="Update Info" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />} /> */}
+      <button
+        className="bg-amber-500 text-white hover:bg-amber-400 active:bg-amber-600 p-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="update"
+        title="Update info"
+        >
+          <AiFillEdit size={15} />
+      </button>
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
@@ -164,7 +171,14 @@ export const PublishEditionModal = ({ editionId }) => {
   }
   return (
     <>
-      <Button onPress={onOpen} title="Publish Edition" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} />
+      {/* <Button onPress={onOpen} title="Publish Edition" isIconOnly size="sm" className="bg-emerald-500 text-white" startContent={<FaCheck size={15} />} /> */}
+      <button
+        className="bg-emerald-500 text-white hover:bg-emerald-400 active:bg-emerald-600 p-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="publish"
+        title="Publish articles"
+        >
+          <FaCheck size={15} />
+      </button>
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}

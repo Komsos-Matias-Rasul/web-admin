@@ -1,88 +1,80 @@
 "use client"
 
-import { Button } from "@heroui/button";
-import { Spinner } from "@heroui/spinner";
-import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
-} from "@heroui/table";
 import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
 import useSWR from "swr";
 
-const columns = [
-  {
-    key: "title",
-    label: "TITLE",
-  },
-  {
-    key: "writer",
-    label: "WRITER",
-  },
-  {
-    key: "category",
-    label: "CATEGORY",
-  },
-  {
-    key: "status",
-    label: "STATUS",
-  },
-  {
-    key: "action",
-    label: "ACTION",
-  },
-];
-
 const ActionsButtonGroup = ({ rowId }) => (
-  <div className="flex gap-2">
+  <div className="flex gap-2 justify-center">
     <Link href={`/admin/editor/${ rowId }`}>
-      <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
+      <button
+        className="bg-amber-500 text-white hover:bg-amber-400 active:bg-amber-600 p-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="edit"
+        title="Edit articles"
+      >
+        <AiFillEdit size={15} />
+      </button>
     </Link>
   </div>
 )
 
-const fetcher = (...args) => fetch(...args)
-  .then(res => res.json())
-  .then(jsonData => {
-    const { data } = jsonData
-    console.log(data)
-    let rows = []
-    if (data.length > 0) {
-      rows = data.map(article => ({
-        key: article.id,
-        title: article.title,
-        writer: article.writer,
-        category: article.category,
-        status: article.published_at ? "PUBLISHED" : "DRAFT",
-        action: <ActionsButtonGroup rowId={article.id} />,
-      }))
+const fetchEditionData = async (endpoint) => {
+  const res = await fetch(endpoint)
+  if (!res.ok) {
+    const jsonData = await res.json()
+    if (jsonData) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
     }
-    return rows
-  })
+  }
+  const { data } = await res.json()
+  const articles = data.articles.map(article => ({
+    key: article.id,
+    title: article.title,
+    writer: article.writer,
+    category: article.category,
+    status: article.published_at ? "PUBLISHED" : "DRAFT",
+    actions: <ActionsButtonGroup rowId={article.id} />,
+  }))
+
+  return articles
+}
 
 export const ArticlesTable = ({ editionId }) => {
-  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${editionId}/articles`, fetcher)
-  return (
-    <Table isStriped aria-label="Example table with dynamic content">
-      <TableHeader columns={columns}>
-        {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
-      </TableHeader>
-      <TableBody
-        emptyContent="Article Done. Me go home :3"
-        items={data || []}
-        isLoading={isLoading}
-        loadingContent={<Spinner color="default" size="lg"/>}>
-        {(item) => (
-          <TableRow key={item.key}>
-            {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${editionId}/articles`, fetchEditionData)
+  if (isLoading) return (
+    <div className="text-amber-600 bg-amber-200 border border-amber-600/50 px-8 py-4 rounded-lg animate-pulse">
+      Loading edition data . . .
+    </div>
   )
-} 
+  if (error) return (
+    <div className="text-rose-600 bg-rose-200 border border-rose-600/50 px-8 py-4 rounded-lg">
+      {error.message}
+    </div>
+  )
+  return (
+    <table className="w-full rounded-lg overflow-hidden">
+      <thead>
+        <tr className="text-white uppercase text-sm bg-blue-primary">
+          <th className="py-2 px-8 text-left">Title</th>
+          <th className="py-2 px-8 text-left">Writer</th>
+          <th className="py-2 px-8 text-left">Category</th>
+          <th className="py-2 px-8">Status</th>
+          <th className="py-2 px-8">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          data.map(article => (
+            <tr key={article.key} className="bg-white text-dark-primary">
+              <td className="pl-8 py-4 font-semibold">{article.title}</td>
+              <td className="pl-8 py-4">{article.writer}</td>
+              <td className="pl-8 py-4">{article.category}</td>
+              <td className="px-4 py-4">{article.status}</td>
+              <td className="px-4 py-4">{article.actions}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  )
+}
