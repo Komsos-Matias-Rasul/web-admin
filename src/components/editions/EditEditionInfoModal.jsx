@@ -1,16 +1,18 @@
-"use client"
+'use client'
+
 import { ModalComponent } from "../ModalComponent"
 import { toast } from 'sonner'
 import { useState } from "react"
+import { AiFillEdit } from "react-icons/ai"
 
-export const CreateNewEditionModal = () => {
+export const EditEditionInfoModal = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [editionTitle, setEditionTitle] = useState("")
-  const [editionYear, setEditionYear] = useState("")
+  const [editionTitle, setEditionTitle] = useState(data.editionTitle)
+  const [editionYear, setEditionYear] = useState(data.editionYear)
   const handleReset = () => {
-    setEditionTitle("")
-    setEditionYear("")
+    setEditionTitle(data.editionTitle)
+    setEditionYear(data.editionYear)
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,8 +23,8 @@ export const CreateNewEditionModal = () => {
 
     try {
       setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/edition`, {
-        method: "POST",
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.rowId}`, {
+        method: "PUT",
         body: JSON.stringify({
           "title": editionTitle,
           "year": Number(editionYear)
@@ -32,9 +34,7 @@ export const CreateNewEditionModal = () => {
       if (!res.ok) {
         throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
       }
-      toast.success("Edisi berhasil ditambahkan")
-      setEditionTitle("")
-      setEditionYear("")
+      toast.success("Informasi edisi berhasil diperbarui")
       setIsModalOpen(false)
     } catch (err) {
       toast.error(err.message)
@@ -42,18 +42,19 @@ export const CreateNewEditionModal = () => {
       setIsLoading(false)
     }
   }
+
   return (
     <>
       <button
-        className="bg-blue-primary text-white font-bold hover:bg-blue-400 active:bg-sky-700 px-4 py-2 rounded-lg transition-colors cursor-pointer"
-        aria-label="create edition"
-        title="Create edition"
-        onClick={() => setIsModalOpen(true)}
-      >
-      Create New Edition
+        className="bg-amber-500 text-white hover:bg-amber-400 active:bg-amber-600 p-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="update"
+        title="Update info"
+        onClick={()=> setIsModalOpen(true)}
+        >
+          <AiFillEdit size={15} />
       </button>
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className="text-dark-primary text-lg font-semibold">Create New Edition</div>
+        <div className="text-dark-primary text-lg font-semibold">Perbarui Informasi Edisi</div>
         <form onReset={handleReset} onSubmit={handleSubmit} className="w-96">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">

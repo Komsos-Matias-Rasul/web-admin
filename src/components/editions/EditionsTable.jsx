@@ -1,11 +1,13 @@
 "use client"
 
-import useSWR from "swr";
 import Image from "next/image";
-import { EditEditionInfoModal, PublishEditionModal } from "./EditionModal";
+import Link from "next/link";
+import useSWR from "swr";
 import { FiEye } from "react-icons/fi";
 import { RiBookletFill } from "react-icons/ri";
-import Link from "next/link";
+
+import { EditEditionInfoModal } from "./EditEditionInfoModal";
+import { PublishEdition } from "./PublishEdition";
 
 const ActionsButtonGroup = ({ editionData }) => (
   <div className="flex gap-2 justify-center">
@@ -21,7 +23,7 @@ const ActionsButtonGroup = ({ editionData }) => (
     </Link>
     {
       editionData.publishedAt === null &&
-      <PublishEditionModal editionId={editionData.rowId} />
+      <PublishEdition editionId={editionData.rowId} />
     }
   </div>
 )

@@ -2,6 +2,7 @@ import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { WriteArticleButton } from "./WriteArticleButton"
+import { Toaster } from "sonner"
 
 // TODO: Secure page by check if the article is exists.
 const ArticleManagerPage = async ({ params }) => {
@@ -24,6 +25,7 @@ const ArticleManagerPage = async ({ params }) => {
 
   return (
     <>
+      <Toaster richColors />
       <PageHeader title="Manage Articles" />
       <div className="flex flex-col gap-2 mt-4 py-4">
         <p>Edition Name: {edTitle}</p>
