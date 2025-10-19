@@ -17,6 +17,7 @@ import {
   FiCheck,
   FiAlertCircle
 } from "react-icons/fi"
+import { AddWriterModal } from "./AddWriterModal"
 
 const handleSubmit = async (title, category, writer, id, setIsLoading, setMessage) => {
   if (!title || !category || !writer) {
@@ -113,10 +114,10 @@ export const SettingsModal = ({
     setAddWriterError("")
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/writers`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/writer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ writer_name: newWriterName.trim() }),
+        body: JSON.stringify({ writer: newWriterName.trim() }),
       })
 
       const data = await res.json()
@@ -232,17 +233,7 @@ export const SettingsModal = ({
                           </option>
                         ))}
                       </select>
-                      <Button
-                        size="sm"
-                        color="primary"
-                        variant="flat"
-                        onPress={onOpenAddWriter}
-                        startContent={<FiPlus size={16} />}
-                        className="px-3"
-                        isDisabled={isLoading}
-                      >
-                        Add
-                      </Button>
+                      <AddWriterModal />
                     </div>
                   </div>
 
@@ -287,66 +278,6 @@ export const SettingsModal = ({
                   </Button>
                 </ModalFooter>
               </form>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-
-      <Modal
-        size="sm"
-        isDismissable={!isAddingWriter}
-        isKeyboardDismissDisabled={true}
-        isOpen={isOpenAddWriter}
-        onOpenChange={onOpenChangeAddWriter}
-      >
-        <ModalContent>
-          {() => (
-            <>
-              <ModalHeader className="flex items-center gap-2">
-                <FiPlus />
-                Add New Writer
-              </ModalHeader>
-
-              <ModalBody>
-                <Input
-                  label="Writer Name"
-                  placeholder="Enter writer name"
-                  value={newWriterName}
-                  onChange={(e) => {
-                    setNewWriterName(e.target.value)
-                    if (addWriterError) setAddWriterError("")
-                  }}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter' && !isAddingWriter) {
-                      e.preventDefault()
-                      handleAddWriter()
-                    }
-                  }}
-                  isInvalid={!!addWriterError}
-                  errorMessage={addWriterError}
-                  isDisabled={isAddingWriter}
-                  autoFocus
-                />
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  color="default"
-                  variant="light"
-                  onPress={handleCancelAddWriter}
-                  isDisabled={isAddingWriter}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  onPress={handleAddWriter}
-                  isLoading={isAddingWriter}
-                  isDisabled={!newWriterName.trim() || isAddingWriter}
-                >
-                  {isAddingWriter ? "Adding..." : "Add Writer"}
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>

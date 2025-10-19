@@ -5,8 +5,8 @@ import { useEffect, useState } from "react"
 const NavButton = ({ pageName, activePage, targetUrl, onClick }) => {
   return (
     <Link href={targetUrl}>
-      <button onClick={onClick} className={"w-full text-xl text-left p-4 rounded-lg transition-all active:bg-black/20 active:scale-95" + 
-        ( activePage === pageName ? " bg-white text-indigo-700": " bg-transparent text-white hover:bg-white/20 hover:shadow-lg")
+      <button onClick={onClick} className={"w-full text-lg text-neutral-200 text-left px-8 py-4 transition-colors" + 
+        ( activePage === pageName ? " bg-blue-primary": " hover:bg-dark-secondary")
       }>
         {pageName}
       </button>
@@ -27,7 +27,8 @@ const SideNavigation = () => {
   }, [])
   
   return (
-    <div className="h-screen fixed flex flex-col px-8 py-4 w-[30%] flex-shrink-0 bg-gradient-to-br from-indigo-600 to-violet-700">
+    <div className="h-screen fixed flex flex-col w-[20%] flex-shrink-0 bg-dark-primary">
+      <p>Komsos Samara</p>
       <NavButton pageName="Drafts" onClick={() => setActivePage("Drafts")} activePage={activePage} targetUrl="/admin/drafts" />
       <NavButton pageName="Editions" onClick={() => setActivePage("Editions")} activePage={activePage} targetUrl="/admin/editions" />
     </div>

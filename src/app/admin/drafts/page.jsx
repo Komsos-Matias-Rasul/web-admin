@@ -1,15 +1,20 @@
 import { DraftTable } from "@/components/draft/DraftTable"
 import Link from "next/link"
-import { Button } from "@heroui/button"
 import { AiFillEdit } from "react-icons/ai";
-import { PublishButton } from "./PublishButton";
+import { PublishButton } from "../../../components/draft/PublishButton";
 import { PageHeader } from "@/components/PageHeader";
 
 
 const ActionsButtonGroup = ({ rowId }) => (
   <div className="flex gap-2">
     <Link href={`/admin/editor/${ rowId }`}>
-      <Button title="Edit Article" isIconOnly size="sm" className="bg-amber-500 text-white" startContent={<AiFillEdit size={15} />}/>
+      <button
+        className="bg-amber-500 text-white hover:bg-amber-400 active:bg-amber-600 p-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="edit"
+        title="Edit article"
+        >
+          <AiFillEdit size={15} />
+      </button>
     </Link>
     <PublishButton rowId={rowId} />
   </div>
