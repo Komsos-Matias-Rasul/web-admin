@@ -51,31 +51,3 @@ export const updateEditionInfoHandler = async (editionData) => {
     }
   })
 }
-
-export const publishEdition = async (editionId) => {
-  const conn = getDB()
-  return new Promise(async (resolve, reject) => {
-    try {
-      let res = await conn.query(`
-        UPDATE active_edition ae
-        SET edition_id = $1
-        RETURNING 1`, [editionId])
-      if (res.rowCount < 1) {
-        reject("Failed to update edition")
-      }
-      res = await conn.query(`
-        UPDATE editions e
-        SET published_at = $1
-        WHERE id = $2
-        RETURNING 1`, [new Date().toISOString(), editionId])
-      if (res.rowCount < 1) {
-        reject("Failed to update edition")
-      }
-      resolve("Edition published successfully")
-    }
-    catch (err) {
-      console.error(err)
-      reject(err)
-    }
-  })
-}
