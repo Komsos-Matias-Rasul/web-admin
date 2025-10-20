@@ -18,7 +18,7 @@ export const WriteArticleButton = ({ editionId }) => {
       }
       const jsonData = await res.json()
       const articleId = jsonData.data.article_id
-      r.push(`/admin/editor/${articleId}`)
+      r.push(`/admin/editions/${editionId}/articles/${articleId}`)
     } catch (err) {
       toast.error(err.message)
     }

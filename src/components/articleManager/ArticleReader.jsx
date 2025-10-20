@@ -71,10 +71,14 @@ const contentFetcher = async (endpoint) => {
   }
   const { data } = await res.json()
   const contentsJson = JSON.parse(data.contents)
+  let contents
+  if (!!contentsJson) {
+    parseJSONContents(contentsJson)
+  } 
 
   const readerData = {
     id: data.id,
-    contents: parseJSONContents(contentsJson),
+    contents
   }
 
   return readerData
