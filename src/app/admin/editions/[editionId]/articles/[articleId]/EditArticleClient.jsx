@@ -1,22 +1,9 @@
 "use client"
-import { useState } from "react"
-import WriteArticle from "@/components/WriteArticle"
-import { ArchiveArticleButton, DeleteArticleButton } from "@/components/articleManager/ArticleButtons"
-import { ImageInput } from "@/components/ThumbnailUploader"
-import { SettingsModal } from "@/components/articleManager/ArticleModals"
 import { ArticleInfo } from "@/components/articleManager/ArticleInfo"
+import { ArticleReader } from "@/components/articleManager/ArticleReader"
 import { ImagePreview } from "@/components/articleManager/ImagePreview"
 
-const EditArticleClient = ({ articleId, initialData }) => {
-  const [currentTitle, setCurrentTitle] = useState(initialData?.dataTitle || "")
-  const [currentWriter, setCurrentWriter] = useState(initialData?.dataWriter || "")
-  const [currentCategory, setCurrentCategory] = useState(initialData?.dataCategory || "")
-
-  const handleSettingsSaved = (updatedData) => {
-    setCurrentTitle(updatedData.title)
-    setCurrentWriter(updatedData.writer)
-    setCurrentCategory(updatedData.category)
-  }
+const EditArticleClient = ({ articleId }) => {
 
   return (
     <main className="flex gap-4">
@@ -25,15 +12,18 @@ const EditArticleClient = ({ articleId, initialData }) => {
           <ImageInput img={initialData?.dataThumbnail ? (process.env.NEXT_PUBLIC_GCLOUD_PREFIX + initialData?.dataThumbnail) : null} articleId={initialData?.dataID} />
         </div>
       </div> */}
-      <WriteArticle
+      <div className="w-3/5">
+        <ArticleReader articleId={articleId}/>
+      </div>
+      {/* <WriteArticle
         dataID={initialData?.dataID}
         categories={initialData?.categories}
         dataContent={initialData?.dataContent}
         dataTitle={currentTitle}
         dataWriter={currentWriter}
         dataCategory={currentCategory}
-      />
-      <div className="flex flex-col w-4/5 gap-4">
+      /> */}
+      <div className="flex flex-col gap-4 w-2/5">
         <ArticleInfo articleId={articleId} />
         <ImagePreview articleId={articleId} />
       </div>

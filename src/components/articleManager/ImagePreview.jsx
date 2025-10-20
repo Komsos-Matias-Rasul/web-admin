@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 import useSWR from "swr"
-import { UpdateImageFileName } from "./UpdateImageFileName"
+import { UpdateImageFileNameModal } from "./UpdateImageFileNameModal"
 
 const fetchArticleCover = async (endpoint) => {
   const res = await fetch(endpoint)
@@ -49,7 +49,7 @@ export const ImagePreview = ({articleId}) => {
         height={0}
         alt=""
         />
-      <UpdateImageFileName initialFileName={data.fileName} fileExt={data.fileExt} fullPath={data.coverImg} />
+      <UpdateImageFileNameModal initialFileName={data.fileName} fileExt={data.fileExt} fullPath={data.coverImg} />
     </div>
   )
 }

@@ -2,7 +2,6 @@ import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { WriteArticleButton } from "./WriteArticleButton"
-import { Toaster } from "sonner"
 
 // TODO: Secure page by check if the article is exists.
 const ArticleManagerPage = async ({ params }) => {

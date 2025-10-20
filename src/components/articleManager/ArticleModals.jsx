@@ -8,8 +8,7 @@ const handleSubmit = async (articleInfo, setIsLoading, mutator, onClose) => {
   const {id, title, writerId, categoryId} = articleInfo
   try {
     if (!title || !writerId || !categoryId) {
-      setMessage({ type: 'error', text: 'Please fill out all required fields' })
-      return false
+      throw new Error('Please fill out all required fields')
     }
 
     setIsLoading(true)
@@ -48,6 +47,7 @@ export const SettingsModal = ({
   const [selectedWriter, setSelectedWriter] = useState(initialData.writerId)
   const [selectedCategory, setSelectedCategory] = useState(initialData.categoryId)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isWriterModalOpen, setIsWriterModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const onReset = () => {
@@ -101,7 +101,7 @@ export const SettingsModal = ({
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Penulis: <span className="text-rose-500">*</span></label>
-              <div className="flex gap-2 w-[90%]">
+              <div className="flex gap-2 w-full">
                 <select
                   value={selectedWriter}
                   onChange={(e) => setSelectedWriter(e.target.value)}
@@ -116,7 +116,15 @@ export const SettingsModal = ({
                     </option>
                   ))}
                 </select>
-                <AddWriterModal />
+                <button
+                  className="text-sm text-blue-primary font-bold hover:bg-blue-primary/20 active:bg-blue-primary/50 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                  aria-label="add writer"
+                  title="Tambah Penulis"
+                  type="button"
+                  onClick={() => {setIsWriterModalOpen(true)}}
+                >
+                Tambah
+                </button>
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -140,7 +148,7 @@ export const SettingsModal = ({
           <div className="flex w-full justify-end gap-2 mt-4">
             <button
               className="text-dark-primary/75 font-bold hover:bg-neutral-200 active:bg-neutral-300 px-4 py-2 rounded-lg transition-colors cursor-pointer min-w-28 disabled:text-dark-primary/30 disabled:bg-transparent disabled:cursor-not-allowed"
-              aria-label="cancel create edition"
+              aria-label="cancel update article info"
               title="Cancel"
               type="reset"
               onClick={() => setIsModalOpen(false)}
@@ -151,7 +159,7 @@ export const SettingsModal = ({
             <button
               className="text-white font-bold bg-blue-primary hover:bg-blue-400 active:bg-blue-600 px-4 py-2 rounded-lg transition-colors cursor-pointer min-w-28 disabled:bg-blue-primary/30 disabled:cursor-not-allowed"
               aria-label="submit new edition"
-              title="Create"
+              title="Save"
               type="submit"
               disabled={isLoading}
             >
@@ -160,6 +168,7 @@ export const SettingsModal = ({
           </div>
         </form>
       </ModalComponent>
+      <AddWriterModal isOpen={isWriterModalOpen} setIsOpen={setIsWriterModalOpen} mutateWriters={writers.mutate}/>
     </>
   )
 }

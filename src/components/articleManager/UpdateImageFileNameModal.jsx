@@ -5,7 +5,7 @@ import { FiSettings } from "react-icons/fi";
 import { ModalComponent } from "../ModalComponent"
 import Link from "next/link";
 
-export const UpdateImageFileName = ({fullPath, initialFileName, fileExt}) => {
+export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt}) => {
   const [fileName, setFileName] = useState(initialFileName)
   const [isModalOpen, setIsModalOpen] =  useState(false)
   const [isLoading, setIsLoading] =  useState(false)
@@ -27,7 +27,7 @@ export const UpdateImageFileName = ({fullPath, initialFileName, fileExt}) => {
           target="_blank"
           href={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + fullPath}
           title="Open image"
-          className="text-dark-primary/80 text-sm hover:text-blue-primary hover:underline">{`${fileName}.${fileExt}`}</Link>
+          className="text-dark-primary/80 text-sm hover:text-blue-primary hover:underline">{`${fileName}.${fileExt}`}&#8690;</Link>
       </div>
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div>
