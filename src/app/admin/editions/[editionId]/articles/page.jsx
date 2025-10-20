@@ -25,7 +25,6 @@ const ArticleManagerPage = async ({ params }) => {
 
   return (
     <>
-      <Toaster richColors />
       <PageHeader title="Manage Articles" />
       <div className="flex flex-col gap-2 mt-4 py-4">
         <p>Edition Name: {edTitle}</p>

@@ -1,4 +1,4 @@
-export const ModalComponent = ({isOpen, onClose, children}) => {
+export const ModalComponent = ({isOpen, children}) => {
   return (
     <div className={`
       fixed inset-0 flex justify-center z-100

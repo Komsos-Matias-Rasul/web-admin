@@ -1,287 +1,165 @@
 "use client"
-import { useState, useEffect } from "react"
-import { Button } from "@heroui/button"
-import { Input } from "@heroui/input"
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  useDisclosure
-} from "@heroui/modal"
-import {
-  FiSettings,
-  FiPlus,
-  FiX,
-  FiCheck,
-  FiAlertCircle
-} from "react-icons/fi"
+import { useState } from "react"
 import { AddWriterModal } from "./AddWriterModal"
+import { ModalComponent } from "../ModalComponent"
+import { toast } from "sonner"
 
-const handleSubmit = async (title, category, writer, id, setIsLoading, setMessage) => {
-  if (!title || !category || !writer) {
-    setMessage({ type: 'error', text: 'Please fill out all required fields' })
-    return false
-  }
-
-  const reqData = {
-    title,
-    category: Number(category),
-    writer: Number(category),
-    id: Number(id)
-  }
-
-  setIsLoading(true)
-  setMessage(null)
-
+const handleSubmit = async (articleInfo, setIsLoading, mutator, onClose) => {
+  const {id, title, writerId, categoryId} = articleInfo
   try {
+    if (!title || !writerId || !categoryId) {
+      setMessage({ type: 'error', text: 'Please fill out all required fields' })
+      return false
+    }
+
+    setIsLoading(true)
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/saveTWC`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(reqData),
+      body: JSON.stringify({
+        title,
+        category: Number(categoryId),
+        writer: Number(writerId),
+        id: Number(id)
+      }),
     })
-
-    const data = await res.json()
-
+    const jsonData = await res.json()
     if (!res.ok) {
-      throw new Error(data.error || `Server error: ${res.status}`)
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
     }
-
-    setMessage({ type: 'success', text: 'Article settings saved successfully!' })
-    return true
+    toast.success("Informasi artikel berhasil diperbarui")
+    mutator.mutateInitialData({id, title, writerId, categoryId})
+    onClose()
   } catch (err) {
-    console.error("Error saving article:", err)
-    setMessage({ type: 'error', text: err.message || 'Failed to save article settings' })
-    return false
+    console.error(err)
+    toast.error(err.message)
   } finally {
     setIsLoading(false)
   }
 }
 
 export const SettingsModal = ({
-  dataID,
+  articleId,
+  initialData,
+  writers,
   categories,
-  writers: initialWriters,
-  dataTitle,
-  dataWriter,
-  dataCategory,
-  onSettingsSaved
 }) => {
-  const { onOpen, onOpenChange, isOpen } = useDisclosure()
-  const {
-    onOpen: onOpenAddWriter,
-    onOpenChange: onOpenChangeAddWriter,
-    isOpen: isOpenAddWriter
-  } = useDisclosure()
-
-  const [articleTitle, setTitle] = useState(dataTitle)
-  const [selectedWriter, setSelectedWriter] = useState(dataWriter)
-  const [selectedCategory, setSelectedCategory] = useState(dataCategory)
-
+  const [articleTitle, setArticleTitle] = useState(initialData.title)
+  const [selectedWriter, setSelectedWriter] = useState(initialData.writerId)
+  const [selectedCategory, setSelectedCategory] = useState(initialData.categoryId)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [message, setMessage] = useState(null)
 
-  const [writers, setWriters] = useState(initialWriters || [])
-  const [newWriterName, setNewWriterName] = useState("")
-  const [isAddingWriter, setIsAddingWriter] = useState(false)
-  const [addWriterError, setAddWriterError] = useState("")
-
-  useEffect(() => {
-    setTitle(dataTitle)
-    setSelectedWriter(dataWriter)
-    setSelectedCategory(dataCategory)
-  }, [dataTitle, dataWriter, dataCategory])
-
-  useEffect(() => {
-    if (initialWriters) setWriters(initialWriters)
-  }, [initialWriters])
-
-  useEffect(() => {
-    if (message) {
-      const timer = setTimeout(() => setMessage(null), 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [message])
-
-  const handleAddWriter = async () => {
-    if (!newWriterName.trim()) {
-      setAddWriterError("Please enter a writer name")
-      return
-    }
-
-    setIsAddingWriter(true)
-    setAddWriterError("")
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/writer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ writer: newWriterName.trim() }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) throw new Error(data.error || "Failed to add writer")
-
-      if (data.success) {
-        const newWriter = data.data
-        setWriters(prev => [...prev, newWriter])
-        setSelectedWriter(String(newWriter.id))
-        setNewWriterName("")
-        onOpenChangeAddWriter()
-        setMessage({ type: 'success', text: 'Writer added successfully!' })
-      }
-    } catch (err) {
-      setAddWriterError(err.message || "Failed to add writer")
-    } finally {
-      setIsAddingWriter(false)
-    }
+  const onReset = () => {
+    setArticleTitle(initialData.title)
+    setSelectedWriter(initialData.writerId)
+    setSelectedCategory(initialData.categoryId)
   }
 
-  const handleCancelAddWriter = () => {
-    setNewWriterName("")
-    setAddWriterError("")
-    onOpenChangeAddWriter()
-  }
-
-  const handleSaveSettings = async (onClose) => {
-    const success = await handleSubmit(
-      articleTitle,
-      selectedCategory,
-      selectedWriter,
-      dataID,
-      setIsLoading,
-      setMessage
-    )
-
-    if (success) {
-      if (onSettingsSaved) {
-        onSettingsSaved({
-          title: articleTitle,
-          writer: selectedWriter,
-          category: selectedCategory
-        })
-      }
-      
-      setTimeout(() => {
-        onClose()
-      }, 1000)
+  const onSubmit = (e) => {
+    e.preventDefault()
+    const articleInfo = {
+      id: articleId,
+      title: articleTitle,
+      writerId: selectedWriter,
+      categoryId: selectedCategory,
     }
-  }
+    const mutator = {
+      mutateInitialData: initialData.mutate,
+      mutateWriters: writers.mutate,
+      mutateCategories: categories.mutate,
+    }
 
-  const MessageAlert = ({ message }) => {
-    if (!message) return null
-    const isError = message.type === 'error'
-    return (
-      <div className={`flex items-center gap-2 p-3 rounded-lg ${
-        isError ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-green-50 text-green-700 border border-green-200'
-      }`}>
-        {isError ? <FiAlertCircle /> : <FiCheck />}
-        <span className="text-sm">{message.text}</span>
-      </div>
-    )
+    handleSubmit(articleInfo, setIsLoading, mutator, () => setIsModalOpen(false))
   }
 
   return (
     <>
-      <Button onPress={onOpen} startContent={<FiSettings />}>Settings</Button>
-
-      <Modal
-        isDismissable={!isLoading}
-        isKeyboardDismissDisabled={true}
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        size="lg"
+      <button
+        className="text-sm bg-blue-primary text-white font-bold hover:bg-blue-400 active:bg-sky-700 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+        aria-label="update article"
+        title="Update Article Info"
+        onClick={() => setIsModalOpen(true)}
       >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>Article Settings</ModalHeader>
-              <form onSubmit={(e) => e.preventDefault()}>
-                <ModalBody className="space-y-4">
-                  <MessageAlert message={message} />
+      Perbarui Informasi
+      </button>
 
-                  <Input
-                    label="Title"
-                    value={articleTitle}
-                    onChange={(e) => {
-                      setTitle(e.target.value)
-                      if (message) setMessage(null)
-                    }}
-                    isDisabled={isLoading}
-                    isRequired
-                  />
-
-                  <div>
-                    <label className="block font-medium mb-2">Writer *</label>
-                    <div className="flex gap-2">
-                      <select
-                        value={selectedWriter}
-                        onChange={(e) => {
-                          setSelectedWriter(e.target.value)
-                          if (message) setMessage(null)
-                        }}
-                        disabled={isLoading}
-                        className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                        required
-                      >
-                        <option value="">Select a writer</option>
-                        {writers.map((writer) => (
-                          <option key={writer.id} value={writer.id}>
-                            {writer.writer_name}
-                          </option>
-                        ))}
-                      </select>
-                      <AddWriterModal />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block font-medium mb-2">Category *</label>
-                    <select
-                      value={selectedCategory}
-                      onChange={(e) => {
-                        setSelectedCategory(e.target.value)
-                        if (message) setMessage(null)
-                      }}
-                      disabled={isLoading}
-                      className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
-                      required
-                    >
-                      <option value="">Select a category</option>
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </ModalBody>
-
-                <ModalFooter>
-                  <Button
-                    color="default"
-                    variant="light"
-                    onPress={onClose}
-                    isDisabled={isLoading}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={() => handleSaveSettings(onClose)}
-                    isLoading={isLoading}
-                    isDisabled={isLoading}
-                  >
-                    {isLoading ? "Saving..." : "Save Settings"}
-                  </Button>
-                </ModalFooter>
-              </form>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      <ModalComponent isOpen={isModalOpen}>
+        <div className="text-dark-primary text-lg font-semibold">Perbarui Informasi Artikel</div>
+        <form onReset={onReset} onSubmit={onSubmit} className="w-[30rem]">
+          <div className="flex flex-col gap-4 mt-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-dark-primary/75 font-semibold">Judul Artikel: <span className="text-rose-500">*</span></label>
+              <input
+                placeholder="Makna Air dalam Pembaptisan"
+                value={articleTitle}
+                onChange={(e) => setArticleTitle(e.target.value)}
+                className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
+                required
+                disabled={isLoading}
+                />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-dark-primary/75 font-semibold">Penulis: <span className="text-rose-500">*</span></label>
+              <div className="flex gap-2 w-[90%]">
+                <select
+                  value={selectedWriter}
+                  onChange={(e) => setSelectedWriter(e.target.value)}
+                  disabled={isLoading}
+                  className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  required
+                >
+                  <option value="">Select a writer</option>
+                  {writers.data.map((writer) => (
+                    <option key={writer.id} value={writer.id}>
+                      {writer.writerName}
+                    </option>
+                  ))}
+                </select>
+                <AddWriterModal />
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm text-dark-primary/75 font-semibold">Kategori: <span className="text-rose-500">*</span></label>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                disabled={isLoading}
+                className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                required
+              >
+                <option value="">Select a category</option>
+                {categories.data.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="flex w-full justify-end gap-2 mt-4">
+            <button
+              className="text-dark-primary/75 font-bold hover:bg-neutral-200 active:bg-neutral-300 px-4 py-2 rounded-lg transition-colors cursor-pointer min-w-28 disabled:text-dark-primary/30 disabled:bg-transparent disabled:cursor-not-allowed"
+              aria-label="cancel create edition"
+              title="Cancel"
+              type="reset"
+              onClick={() => setIsModalOpen(false)}
+              disabled={isLoading}
+            >
+            Batalkan
+            </button>
+            <button
+              className="text-white font-bold bg-blue-primary hover:bg-blue-400 active:bg-blue-600 px-4 py-2 rounded-lg transition-colors cursor-pointer min-w-28 disabled:bg-blue-primary/30 disabled:cursor-not-allowed"
+              aria-label="submit new edition"
+              title="Create"
+              type="submit"
+              disabled={isLoading}
+            >
+            {isLoading ? <div className="flex justify-center items-center w-full"><span className="loader"></span></div> : "Simpan"}
+            </button>
+          </div>
+        </form>
+      </ModalComponent>
     </>
   )
 }

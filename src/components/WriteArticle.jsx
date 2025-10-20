@@ -55,15 +55,15 @@ const WriteArticle = ({ dataContent, dataID }) => {
     }
   };
 
-  useState(() => {
-    if (responseMessage) {
-      const timer = setTimeout(() => {
-        setResponseMessage("");
-        setResponseType("");
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [responseMessage]);
+  // useState(() => {
+  //   if (responseMessage) {
+  //     const timer = setTimeout(() => {
+  //       setResponseMessage("");
+  //       setResponseType("");
+  //     }, 5000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [responseMessage]);
 
   return (
     <>
@@ -78,7 +78,7 @@ const WriteArticle = ({ dataContent, dataID }) => {
           </div>
         )}
         
-        <button
+        {/* <button
           onClick={() => handleSubmit(dataArticle, dataID)}
           disabled={isLoading || !hasUnsavedChanges}
           className={`
@@ -93,7 +93,7 @@ const WriteArticle = ({ dataContent, dataID }) => {
             <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
           )}
           {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Draft' : 'All Changes Saved'}
-        </button>
+        </button> */}
       </div>
 
       <div className="bg-white rounded-lg shadow-lg px-16 py-4 w-full mb-8">

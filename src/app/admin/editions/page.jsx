@@ -1,12 +1,10 @@
 import { EditionsTable } from "@/components/editions/EditionsTable"
 import { CreateNewEditionModal } from "@/components/editions/CreateNewEditionModal"
 import { PageHeader } from "@/components/PageHeader"
-import { Toaster } from 'sonner'
 
 const EditionsPage = async () => {
   return (
     <>
-      <Toaster richColors />
       <PageHeader title="Zaitun Editions Manager" />
       <div className="text mb-2">Hello, Komsos Samara!</div>
 

@@ -37,6 +37,7 @@ export const CreateNewEditionModal = () => {
       setEditionYear("")
       setIsModalOpen(false)
     } catch (err) {
+      console.error(err)
       toast.error(err.message)
     } finally {
       setIsLoading(false)
