@@ -93,7 +93,7 @@ export const ArticleReader = ({articleId}) => {
         href={`/admin/editor/${articleId}`}
         className="flex items-center w-fit gap-1 bg-blue-primary text-white font-bold hover:bg-blue-400 active:bg-blue-600 px-4 py-2 rounded-lg transition-colors cursor-pointer"
         aria-label="write"
-        title="Write articles"
+        title="Tulis artikel"
       >
         <p>Pergi ke Mode Edit</p>
         <FiArrowUpRight size={25} />
