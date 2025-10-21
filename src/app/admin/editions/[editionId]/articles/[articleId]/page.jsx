@@ -1,55 +1,22 @@
-import EditArticleClient from "./EditArticleClient"
+import { ArticleReader } from "@/components/articleManager/ArticleReader"
+import { ArticleInfo } from "@/components/articleManager/ArticleInfo"
+import { ImagePreview } from "@/components/articleManager/ImagePreview"
 
 const EditArticlePage = async ({ params }) => {
   const param = await params
-  let categories = []
-  let writers = []
-  let dataContent, dataThumbnail, dataTitle, dataWriter, dataCategory, dataID
+  const articleId = Number(param.articleId)
 
-  try {
-    let res = await fetch(`${process.env.BACKEND_URL}/api/core/categories/by-article/${Number(param.articleId)}`)
-    if (!res.ok) {
-      throw new Error(res.statusText)
-    }
-    let jsonData = await res.json()
-    categories = jsonData.data
-
-    res = await fetch(`${process.env.BACKEND_URL}/api/core/writers`)
-    if (!res.ok) {
-      throw new Error(res.statusText)
-    }
-    jsonData = await res.json()
-    writers = jsonData.data
-    
-    res = await fetch(`${process.env.BACKEND_URL}/api/core/articles/${Number(param.articleId)}`)
-    if (!res.ok) {
-      throw new Error(res.statusText)
-    }
-    jsonData = await res.json()
-    const article = jsonData.data
-    dataID = Number(param.articleId)
-    dataContent = JSON.parse(article.content_json)
-    dataThumbnail = article.headline_img
-    dataTitle = article.title || ""
-    dataWriter = String(article.writer_id)
-    dataCategory = String(article.category_id)
-    
-  } catch (err) {
-    console.error(err)
-  }
-
-  const initialData = {
-    categories,
-    writers,
-    dataContent,
-    dataThumbnail,
-    dataTitle,
-    dataWriter,
-    dataCategory,
-    dataID
-  }
-
-  return <EditArticleClient articleId={Number(param.articleId)} initialData={initialData} />
+  return (
+    <main className="flex gap-4">
+    <div className="w-3/5">
+      <ArticleReader articleId={articleId}/>
+    </div>
+    <div className="flex flex-col gap-4 w-2/5">
+      <ArticleInfo articleId={articleId} />
+      <ImagePreview articleId={articleId} />
+    </div>
+  </main>
+  )
 }
 
 export default EditArticlePage
