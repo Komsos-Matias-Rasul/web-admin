@@ -56,12 +56,12 @@ const fetchCategories = async(endpoint) => {
 
 const getWriterName = (writerId, writers) => {
   const writer = writers.find(writer => writer.id === Number(writerId))
-  return writer.writerName || "Unknown Writer"
+  return writer?.writerName || "Unknown Writer"
 }
 
 const getCategoryName = (categoryId, categories) => {
   const category = categories.find(c => c.id === Number(categoryId))
-  return category.label || "Unknown Category"
+  return category?.label || "Unknown Category"
 }
 
 

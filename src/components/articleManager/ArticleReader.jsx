@@ -73,7 +73,7 @@ const contentFetcher = async (endpoint) => {
   const contentsJson = JSON.parse(data.contents)
   let contents
   if (!!contentsJson) {
-    parseJSONContents(contentsJson)
+    contents = parseJSONContents(contentsJson)
   } 
 
   const readerData = {
