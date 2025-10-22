@@ -4,11 +4,54 @@ import { useState } from "react"
 import { FiSettings } from "react-icons/fi";
 import { ModalComponent } from "../ModalComponent"
 import Link from "next/link";
+import { toast } from "sonner";
 
-export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt}) => {
+const handleSubmit = async(fileData, setIsLoading, onSuccess, onError) => {
+  setIsLoading(true)
+  try{
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/covers/article/${Number(fileData.articleId)}`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          newHeadline: fileData.fileName,
+          fileExtension: fileData.extension,
+        })
+      })
+    const jsonData = await res.json()
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    toast.success("Nama file berhasil diperbarui")
+    onSuccess()
+  }catch(err){
+    console.error(err.message)
+    toast.error(err.message)
+    onError()
+  }finally{
+    setIsLoading(false)
+  }
+}
+
+export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt, articleId}) => {
   const [fileName, setFileName] = useState(initialFileName)
   const [isModalOpen, setIsModalOpen] =  useState(false)
   const [isLoading, setIsLoading] =  useState(false)
+
+  const onSubmit = (e) => {
+    e.preventDefault()
+    const fileData = {
+      articleId,
+      fileName,
+      extension: fileExt
+    }
+    handleSubmit(
+      fileData,
+      setIsLoading,
+      () => setIsModalOpen(false),
+      () => setFileName(initialFileName)
+    )
+  }
 
   return (
     <>
@@ -32,7 +75,7 @@ export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt}) =
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div>
           <p className="text-dark-primary font-bold text-xl mb-4">Perbarui Nama <i>File</i></p>
-          <form className="w-[30rem]">
+          <form onSubmit={onSubmit} className="w-120">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Nama <i>file</i>: <span className="text-rose-500">*</span></label>

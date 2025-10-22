@@ -49,7 +49,12 @@ export const ImagePreview = ({articleId}) => {
         height={0}
         alt=""
         />
-      <UpdateImageFileNameModal initialFileName={data.fileName} fileExt={data.fileExt} fullPath={data.coverImg} />
+      <UpdateImageFileNameModal
+        articleId={articleId}
+        initialFileName={data.fileName}
+        fileExt={data.fileExt}
+        fullPath={data.coverImg}
+      />
     </div>
   )
 }
