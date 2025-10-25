@@ -44,6 +44,10 @@ const WriteArticle = ({ articleContents, articleId, articleLastUpdate }) => {
   const [contents, setContents] = useState(articleContents);
   const [lastUpdate, setLastUpdate] = useState(articleLastUpdate)
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    console.log(contents)
+  }, [contents])
   
   const onSubmit = (e) => {
     e.preventDefault()

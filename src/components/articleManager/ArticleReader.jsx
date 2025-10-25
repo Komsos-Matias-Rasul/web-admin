@@ -30,8 +30,8 @@ const parseJSONContents = (contents) => {
       return (
         <div key={block.id} className="my-8 relative">
           <Image
-            src={block.data.file.url}
-            alt={block.data.caption}
+            src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + block.data.file.url}
+            alt={block.data.caption || ""}
             sizes="(max-width: 768px) 100vw, 50vw"
             height={0}
             width={200}

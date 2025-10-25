@@ -1,12 +1,32 @@
 'use client'
 
 import { useState } from "react"
-import { FiSettings } from "react-icons/fi";
 import { ModalComponent } from "../ModalComponent"
-import Link from "next/link";
 import { toast } from "sonner";
 
-const handleSubmit = async(fileData, setIsLoading, onSuccess, onError) => {
+const handleSubmit = async(fileData, setIsLoading, onSuccess) => {
+  if(fileData.fileName.trim().length === 0) {
+    toast.error("Masukan nama file")
+    return
+  }
+  
+  const validExtensions = /\.(png|jpe?g|webp)$/i
+  const isExtensionValid = validExtensions.test(fileData.fileName)
+
+  if (!isExtensionValid) {
+    toast.error("Nama file tidak valid. Gunakan ekstensi (jpg/jpeg/png/webp)")
+    return
+  }
+
+  // Checks invalid characters: / \ ? % * : | " < > ^
+  const invalidChars = /[\/\\?%*:|"<>^]/
+  const isInvalid = invalidChars.test(fileData.fileName)
+
+  if (isInvalid) {
+    toast.error("Nama file tidak valid. Jangan gunakan karakter spesial")
+    return
+  }
+
   setIsLoading(true)
   try{
     const res = await fetch(
@@ -14,8 +34,8 @@ const handleSubmit = async(fileData, setIsLoading, onSuccess, onError) => {
       {
         method: "PUT",
         body: JSON.stringify({
-          newHeadline: fileData.fileName,
-          fileExtension: fileData.extension,
+          newHeadline: encodeURIComponent(fileData.fileName),
+          source: "user-input"
         })
       })
     const jsonData = await res.json()
@@ -27,15 +47,13 @@ const handleSubmit = async(fileData, setIsLoading, onSuccess, onError) => {
   }catch(err){
     console.error(err.message)
     toast.error(err.message)
-    onError()
   }finally{
     setIsLoading(false)
   }
 }
 
-export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt, articleId}) => {
+export const RenameModal = ({initialFileName, articleId, isModalOpen, setIsModalOpen, onSuccess}) => {
   const [fileName, setFileName] = useState(initialFileName)
-  const [isModalOpen, setIsModalOpen] =  useState(false)
   const [isLoading, setIsLoading] =  useState(false)
 
   const onSubmit = (e) => {
@@ -43,39 +61,47 @@ export const UpdateImageFileNameModal = ({fullPath, initialFileName, fileExt, ar
     const fileData = {
       articleId,
       fileName,
-      extension: fileExt
     }
     handleSubmit(
       fileData,
       setIsLoading,
-      () => setIsModalOpen(false),
-      () => setFileName(initialFileName)
+      () => {
+        setFileName(initialFileName)
+        setIsModalOpen(false)
+        onSuccess()
+      }
     )
+  }
+
+  const onReset = () => {
+    setFileName(initialFileName)
   }
 
   return (
     <>
-      <div className="flex flex-col mt-4">
-        <div className="flex gap-2">
-          <label className="text-dark-secondary font-semibold">Nama <i>file</i>:</label>
-          <button
-            title="Update filename"
-            className="px-2 text-sm rounded text-white bg-blue-primary hover:bg-blue hover:bg-blue-400 active:bg-blue-600 transition-colors cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
-          >
-            Perbarui
-          </button>
-        </div>
-        <Link
-          target="_blank"
-          href={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + fullPath}
-          title="Open image"
-          className="text-dark-primary/80 text-sm hover:text-blue-primary hover:underline">{`${fileName}.${fileExt}`}&#8690;</Link>
-      </div>
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div>
           <p className="text-dark-primary font-bold text-xl mb-4">Perbarui Nama <i>File</i></p>
-          <form onSubmit={onSubmit} className="w-120">
+          <h2 className="text-dark-primary/75 text-sm mb-2">Panduan <b><i>Search Engine Optimization</i> (SEO)</b> untuk nama <i>file</i>:</h2>
+          <div className="text-dark-primary/75 text-sm flex flex-col gap-4 mb-6">
+            <div>
+              <p className="mb-1">1. Ganti spasi dengan <i>dash</i> (-) atau <i>underscore</i> (_). Contoh:</p>
+              <p className="mb-1 ml-2">✅ Lustrum-OMK-Kosambi-Baru.JPG</p>
+              <p className="mb-1 ml-2">✅ Lustrum_OMK_Kosambi_Baru.JPG</p>
+              <p className="mb-1 ml-2">👎 Lustrum OMK Kosambi Baru.JPG</p>
+            </div>
+            <div>
+              <p className="mb-1">2. Gunakan nama yang deskriptif. Contoh:</p>
+              <p className="mb-1 ml-2">✅ Penerimaan-Baptisan-Baru-2025.JPG</p>
+              <p className="mb-1 ml-2">👎 IMG20250301_183201.JPG</p>
+            </div>
+            <div>
+              <p className="mb-1">3. Jangan gunakan karakter spesial <b>/&lt;&gt;^\:&quot;|?*</b> Contoh:</p>
+              <p className="mb-1 ml-2">✅ Seminar-Hidup-Baru_Menjadi-Saksi-Kristus.JPG</p>
+              <p className="mb-1 ml-2">👎 Seminar-Hidup-Baru:-Menjadi-Saksi-Kristus.JPG</p>
+            </div>
+          </div>
+          <form onSubmit={onSubmit} onReset={onReset} className="w-120">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Nama <i>file</i>: <span className="text-rose-500">*</span></label>
