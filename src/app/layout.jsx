@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata = {
@@ -11,6 +12,7 @@ export default function RootLayout({ children }) {
       <body
         className={`antialiased`}
       >
+        <Toaster richColors/>
         {children}
       </body>
     </html>

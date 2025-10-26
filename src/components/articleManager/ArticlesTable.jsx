@@ -4,13 +4,13 @@ import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
 import useSWR from "swr";
 
-const ActionsButtonGroup = ({ rowId }) => (
+const ActionsButtonGroup = ({ editionId, articleId }) => (
   <div className="flex gap-2 justify-center">
-    <Link href={`/admin/editor/${ rowId }`}>
+    <Link href={`/admin/editions/${ editionId }/articles/${ articleId }`}>
       <button
         className="bg-amber-500 text-white hover:bg-amber-400 active:bg-amber-600 p-2 rounded-lg transition-colors cursor-pointer"
         aria-label="edit"
-        title="Edit articles"
+        title="Edit artikel"
       >
         <AiFillEdit size={15} />
       </button>
@@ -33,7 +33,6 @@ const fetchEditionData = async (endpoint) => {
     writer: article.writer,
     category: article.category,
     status: article.published_at ? "PUBLISHED" : "DRAFT",
-    actions: <ActionsButtonGroup rowId={article.id} />,
   }))
 
   return articles
@@ -70,7 +69,12 @@ export const ArticlesTable = ({ editionId }) => {
               <td className="pl-8 py-4">{article.writer}</td>
               <td className="pl-8 py-4">{article.category}</td>
               <td className="px-4 py-4">{article.status}</td>
-              <td className="px-4 py-4">{article.actions}</td>
+              <td className="px-4 py-4">
+                <ActionsButtonGroup
+                  editionId={editionId}
+                  articleId={article.key}
+                />
+              </td>
             </tr>
           ))
         }

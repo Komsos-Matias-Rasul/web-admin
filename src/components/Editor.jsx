@@ -6,7 +6,7 @@ import { PLUGINS } from "./EditorPlugins"
 
 
 
-const Editor = ({ data, onChange, editorBlock}) => {
+const Editor = ({ data, onContentChange, editorBlock}) => {
   const ref = useRef()
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Editor = ({ data, onChange, editorBlock}) => {
         autofocus: true,
         async onChange(api, event) {
           const data = await api.saver.save()
-          onChange(data)
+          onContentChange(data)
         },
         logLevel: 'WARNING',
       })
