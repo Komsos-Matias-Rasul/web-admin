@@ -23,7 +23,7 @@ export const EditEditionInfoModal = ({ data }) => {
 
     try {
       setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.rowId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.rowId}/save-info`, {
         method: "PUT",
         body: JSON.stringify({
           "title": editionTitle,

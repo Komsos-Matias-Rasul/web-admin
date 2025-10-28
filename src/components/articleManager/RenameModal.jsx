@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ModalComponent } from "../ModalComponent"
 import { toast } from "sonner";
 
-const handleSubmit = async(fileData, setIsLoading, onSuccess) => {
+const handleRenameArticleCover = async(fileData, setIsLoading, onSuccess) => {
   if(fileData.fileName.trim().length === 0) {
     toast.error("Masukan nama file")
     return
@@ -30,7 +30,7 @@ const handleSubmit = async(fileData, setIsLoading, onSuccess) => {
   setIsLoading(true)
   try{
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/covers/article/${Number(fileData.articleId)}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${Number(fileData.articleId)}/cover/rename`,
       {
         method: "PUT",
         body: JSON.stringify({
@@ -52,25 +52,88 @@ const handleSubmit = async(fileData, setIsLoading, onSuccess) => {
   }
 }
 
-export const RenameModal = ({initialFileName, articleId, isModalOpen, setIsModalOpen, onSuccess}) => {
+const handleRenameEditionCover = async(fileData, setIsLoading, onSuccess) => {
+  if(fileData.fileName.trim().length === 0) {
+    toast.error("Masukan nama file")
+    return
+  }
+  
+  const validExtensions = /\.(png|jpe?g|webp)$/i
+  const isExtensionValid = validExtensions.test(fileData.fileName)
+
+  if (!isExtensionValid) {
+    toast.error("Nama file tidak valid. Gunakan ekstensi (jpg/jpeg/png/webp)")
+    return
+  }
+
+  // Checks invalid characters: / \ ? % * : | " < > ^
+  const invalidChars = /[\/\\?%*:|"<>^]/
+  const isInvalid = invalidChars.test(fileData.fileName)
+
+  if (isInvalid) {
+    toast.error("Nama file tidak valid. Jangan gunakan karakter spesial")
+    return
+  }
+
+  setIsLoading(true)
+  try{
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${Number(fileData.editionId)}/cover/rename`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          newCover: encodeURIComponent(fileData.fileName),
+          source: "user-input"
+        })
+      })
+    const jsonData = await res.json()
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    toast.success("Nama file berhasil diperbarui")
+    onSuccess()
+  }catch(err){
+    console.error(err.message)
+    toast.error(err.message)
+  }finally{
+    setIsLoading(false)
+  }
+}
+
+export const RenameModal = ({initialFileName, articleId, editionId, isModalOpen, setIsModalOpen, onSuccess, onClose = () => null}) => {
   const [fileName, setFileName] = useState(initialFileName)
   const [isLoading, setIsLoading] =  useState(false)
 
   const onSubmit = (e) => {
     e.preventDefault()
-    const fileData = {
-      articleId,
-      fileName,
-    }
-    handleSubmit(
-      fileData,
-      setIsLoading,
-      () => {
-        setFileName(initialFileName)
+    const _onSuccess = () => {
+      setFileName("")
         setIsModalOpen(false)
         onSuccess()
+        onClose()
+    }
+
+    if (articleId && editionId) {
+      throw new Error("found articleId and editionId. select one.")
+    }
+
+    if (articleId) {
+      const fileData = {
+        articleId,
+        fileName,
       }
-    )
+      handleRenameArticleCover(fileData, setIsLoading, _onSuccess)
+      return
+    } if (editionId) {
+      const fileData = {
+        editionId,
+        fileName,
+      }
+      handleRenameEditionCover(fileData, setIsLoading, _onSuccess)
+      return
+    }
+
+    throw new Error("no given articleId nor editionId. select one.")
   }
 
   const onReset = () => {
@@ -79,7 +142,7 @@ export const RenameModal = ({initialFileName, articleId, isModalOpen, setIsModal
 
   return (
     <>
-      <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      <ModalComponent isOpen={isModalOpen}>
         <div>
           <p className="text-dark-primary font-bold text-xl mb-4">Perbarui Nama <i>File</i></p>
           <h2 className="text-dark-primary/75 text-sm mb-2">Panduan <b><i>Search Engine Optimization</i> (SEO)</b> untuk nama <i>file</i>:</h2>
@@ -121,7 +184,10 @@ export const RenameModal = ({initialFileName, articleId, isModalOpen, setIsModal
               aria-label="cancel create edition"
               title="Cancel"
               type="reset"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                setIsModalOpen(false)
+                onClose()
+              }}
               disabled={isLoading}
             >
             Cancel
