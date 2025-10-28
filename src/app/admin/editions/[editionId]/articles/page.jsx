@@ -10,7 +10,7 @@ const ArticleManagerPage = async ({ params }) => {
   let edTitle
   let isActive
   try{
-    const res = await fetch(`${process.env.BACKEND_URL}/api/core/editions/${Number(param.editionId)}`)
+    const res = await fetch(`${process.env.BACKEND_URL}/api/core/editions/${Number(param.editionId)}/info`)
     const jsonData = await res.json()
     if (!res.ok){
       return <p>Error</p>

@@ -5,7 +5,7 @@ import { FaCheck } from "react-icons/fa";
 
 const handlePublish = async (articleId, r) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/publish/${Number(articleId)}`,
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${Number(articleId)}/publish`,
     {
       method: 'POST',
     })

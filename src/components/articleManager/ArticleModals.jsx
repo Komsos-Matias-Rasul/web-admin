@@ -12,14 +12,13 @@ const handleSubmit = async (articleInfo, setIsLoading, mutator, onClose) => {
     }
 
     setIsLoading(true)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/saveTWC`, {
-      method: "POST",
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${Number(id)}/save-info`, {
+      method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         title,
         category: Number(categoryId),
         writer: Number(writerId),
-        id: Number(id)
       }),
     })
     const jsonData = await res.json()

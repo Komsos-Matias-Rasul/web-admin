@@ -7,8 +7,13 @@ export const WriteArticleButton = ({ editionId }) => {
   const r = useRouter()
   const handleNewArticle = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/create/${editionId}`,
-        { method: "POST" }
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/article`,
+        { 
+          method: "POST",
+          body: JSON.stringify({
+            editionId: editionId,
+          })
+        }
       )
       if (!res.ok) {
         const jsonData = await res.json()

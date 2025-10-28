@@ -1,5 +1,4 @@
-import { EditionsTable } from "@/components/editions/EditionsTable"
-import { CreateNewEditionModal } from "@/components/editions/CreateNewEditionModal"
+import { EditionsTableWrapper } from "@/components/editions/EditionsTableWrapper"
 import { PageHeader } from "@/components/PageHeader"
 
 const EditionsPage = async () => {
@@ -7,12 +6,7 @@ const EditionsPage = async () => {
     <>
       <PageHeader title="Zaitun Editions Manager" />
       <div className="text mb-2">Hello, Komsos Samara!</div>
-
-      <div className="w-full flex justify-end items-center my-4">
-        <CreateNewEditionModal />
-      </div>
-
-      <EditionsTable />
+      <EditionsTableWrapper />
     </>
   )
 }

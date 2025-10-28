@@ -12,7 +12,7 @@ export const PublishEdition = ({editionId}) => {
     e.preventDefault()
     try {
       setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/publish/${editionId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${editionId}/publish`, {
         method: "PUT",
       })
       const jsonData = await res.json()

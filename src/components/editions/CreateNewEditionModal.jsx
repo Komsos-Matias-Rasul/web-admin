@@ -3,46 +3,61 @@ import { ModalComponent } from "../ModalComponent"
 import { toast } from 'sonner'
 import { useState } from "react"
 
-export const CreateNewEditionModal = () => {
+const handleSubmit = async (editionData, setIsLoading, _onSuccess) => {
+  try {
+    setIsLoading(true)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/edition`, {
+      method: "POST",
+      body: JSON.stringify({
+        "title": editionData.title,
+        "year": Number(editionData.year)
+      })
+    })
+    const jsonData = await res.json()
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    toast.success("Edisi berhasil ditambahkan")
+    _onSuccess()
+  } catch (err) {
+    console.error(err)
+    toast.error(err.message)
+  } finally {
+    setIsLoading(false)
+  }
+}
+
+export const CreateNewEditionModal = (onSuccess) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [editionTitle, setEditionTitle] = useState("")
   const [editionYear, setEditionYear] = useState("")
-  const handleReset = () => {
+  const onReset = () => {
     setEditionTitle("")
     setEditionYear("")
   }
-  const handleSubmit = async (e) => {
+
+  const onSubmit = (e) => {
     e.preventDefault()
     if (editionYear < 1970){
       toast.error("Tahun edisi tidak valid")
       return
     }
-
-    try {
-      setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/edition`, {
-        method: "POST",
-        body: JSON.stringify({
-          "title": editionTitle,
-          "year": Number(editionYear)
-        })
-      })
-      const jsonData = await res.json()
-      if (!res.ok) {
-        throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
-      }
-      toast.success("Edisi berhasil ditambahkan")
-      setEditionTitle("")
-      setEditionYear("")
-      setIsModalOpen(false)
-    } catch (err) {
-      console.error(err)
-      toast.error(err.message)
-    } finally {
-      setIsLoading(false)
+    const editionData = {
+      title: editionTitle,
+      year: editionYear,
     }
+    handleSubmit(
+      editionData,
+      setIsLoading,
+      ()=> {
+        setEditionTitle("")
+        setEditionYear("")
+        setIsModalOpen(false)
+        onSuccess()
+    })
   }
+  
   return (
     <>
       <button
@@ -55,7 +70,7 @@ export const CreateNewEditionModal = () => {
       </button>
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="text-dark-primary text-lg font-semibold">Create New Edition</div>
-        <form onReset={handleReset} onSubmit={handleSubmit} className="w-96">
+        <form onReset={onReset} onSubmit={onSubmit} className="w-96">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Judul Edisi: <span className="text-rose-500">*</span></label>

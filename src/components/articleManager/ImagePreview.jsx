@@ -90,15 +90,14 @@ export const ImagePreview = ({articleId}) => {
               {`${data.fileName}`}&#8690;
           </Link>
         </div>
-        <RenameModal
-          articleId={articleId}
-          initialFileName={data.fileName}
-          isModalOpen={isRenameModalOpen}
-          setIsModalOpen={setIsRenameModalOpen}
-          onSuccess={mutate}
-        />
       </div>
-
+      <RenameModal
+        articleId={articleId}
+        initialFileName={data.fileName}
+        isModalOpen={isRenameModalOpen}
+        setIsModalOpen={setIsRenameModalOpen}
+        onSuccess={mutate}
+      />
       <UploadCoverModal
         articleId={articleId}
         isOpen={isModalOpen}

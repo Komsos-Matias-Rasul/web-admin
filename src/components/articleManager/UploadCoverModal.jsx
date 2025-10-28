@@ -5,7 +5,7 @@ import { ModalComponent } from "../ModalComponent"
 import { toast } from "sonner";
 import { FiUploadCloud } from "react-icons/fi";
 
-const asyncThumbnailCompress = (path, id) => {
+const asyncArticleThumbnailCompress = (path, id) => {
   return new Promise(async(resolve, reject) => {
     try{
       const res = await fetch("https://samara-image-compression-function-979817516257.asia-southeast2.run.app",
@@ -35,7 +35,7 @@ const asyncThumbnailCompress = (path, id) => {
   })
 }
 
-const handleUploadArticleHeadline = async(fileData, setIsLoading, onSuccess) => {
+const handleUploadArticleCover = async(fileData, setIsLoading, onSuccess) => {
   setIsLoading(true)
   try{
     // get signed url from backend
@@ -67,7 +67,7 @@ const handleUploadArticleHeadline = async(fileData, setIsLoading, onSuccess) => 
     }
     
     // call asynchronous work to cloud function
-    asyncThumbnailCompress(location, fileData.articleId)
+    asyncArticleThumbnailCompress(location, fileData.articleId)
     
     const cleanUrl = url.split("?")[0]
     const fileName = cleanUrl.replace(process.env.NEXT_PUBLIC_GCLOUD_PREFIX, "")
@@ -93,7 +93,94 @@ const handleUploadArticleHeadline = async(fileData, setIsLoading, onSuccess) => 
   }
 }
 
-export const UploadCoverModal = ({articleId, editionId, setIsModalOpen, isOpen, onSuccess}) => {
+const asyncEditionThumbnailCompress = (path, id) => {
+  return new Promise(async(resolve, reject) => {
+    try{
+      const res = await fetch("https://samara-image-compression-function-979817516257.asia-southeast2.run.app",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "path": path
+          })
+        })
+      const jsonData = await res.json()
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${id}/cover/thumbnail`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            fileName: jsonData.url,
+          })
+        })
+      resolve()
+    } catch (err) {
+      toast.warning("Failed to generate thumbnail")
+      console.error(err)
+      reject(err)
+    }
+  })
+}
+
+const handleUploadEditionCover = async(fileData, setIsLoading, onSuccess = () => null) => {
+  setIsLoading(true)
+  try{
+    // get signed url from backend
+    let res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${Number(fileData.editionId)}/cover`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          fileName: fileData.fileName,
+          contentType: fileData.selectedImage.type,
+        })
+      })
+    let jsonData = await res.json()
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    const {url, location} = jsonData.data
+    // upload img to GCS using signed url
+    res = await fetch(url,{
+      headers: {
+        "Content-Type": fileData.selectedImage.type
+      },
+      method: 'PUT',
+      body: fileData.selectedImage,
+    })
+    if (!res.ok) {
+      throw new Error(`${res.status}`)
+    }
+    
+    // call asynchronous work to cloud function
+    asyncEditionThumbnailCompress(location, fileData.editionId)
+    
+    const cleanUrl = url.split("?")[0]
+    const fileName = cleanUrl.replace(process.env.NEXT_PUBLIC_GCLOUD_PREFIX, "")
+    res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${Number(fileData.editionId)}/cover/rename`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({
+          source: "google-cloud",
+          newCover: fileName,
+        })
+      })
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    toast.success("Gambar berhasil diunggah")
+    onSuccess()
+  }catch(err){
+    console.error(err.message)
+    toast.error(err.message)
+  }finally{
+    setIsLoading(false)
+  }
+}
+
+export const UploadCoverModal = ({articleId, editionId, setIsModalOpen, isOpen, onSuccess = () => null, onClose = () => null}) => {
   const [fileName, setFileName] = useState("")
   const [isLoading, setIsLoading] =  useState(false)
   const [selectedImage, setSelectedImage] = useState(null);
@@ -115,21 +202,38 @@ export const UploadCoverModal = ({articleId, editionId, setIsModalOpen, isOpen, 
       toast.error("Tentukan gambar yang akan diunggah")
       return
     }
-    const fileData = {
-      articleId,
-      fileName,
-      selectedImage
+    const _onSuccess = () => {
+      setIsModalOpen(false)
+      setFileName("")
+      setSelectedImage(null)
+      setPreviewUrl(null)
+      onSuccess()
+      onClose()
     }
-    handleUploadArticleHeadline(
-      fileData,
-      setIsLoading,
-      () => {
-        setIsModalOpen(false)
-        setFileName("")
-        setSelectedImage(null)
-        setPreviewUrl(null)
-        onSuccess()
-      })
+
+    if (articleId && editionId) {
+      throw new Error("found articleId and editionId. select one.")
+    }
+
+    if (articleId){
+      const fileData = {
+        articleId,
+        fileName,
+        selectedImage
+      }
+      handleUploadArticleCover(fileData, setIsLoading, _onSuccess)
+      return
+    } if (editionId) {
+      const fileData = {
+        editionId,
+        fileName,
+        selectedImage
+      }
+      handleUploadEditionCover(fileData, setIsLoading, _onSuccess)
+      return
+    }
+
+    throw new Error("no given articleId nor editionId. select one.")
   }
 
   const onReset = () => {
@@ -220,7 +324,10 @@ export const UploadCoverModal = ({articleId, editionId, setIsModalOpen, isOpen, 
                 aria-label="cancel create edition"
                 title="Cancel"
                 type="reset"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  setIsModalOpen(false)
+                  onClose()
+                }}
                 disabled={isLoading}
               >
               Tutup
