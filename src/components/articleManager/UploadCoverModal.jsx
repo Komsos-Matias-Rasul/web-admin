@@ -8,7 +8,7 @@ import { FiUploadCloud } from "react-icons/fi";
 const asyncArticleThumbnailCompress = (path, id) => {
   return new Promise(async(resolve, reject) => {
     try{
-      const res = await fetch("https://samara-image-compression-function-979817516257.asia-southeast2.run.app",
+      const res = await fetch(process.env.NEXT_PUBLIC_COMPRESS_FUNCTION,
         {
           method: "POST",
           headers: {
@@ -96,7 +96,7 @@ const handleUploadArticleCover = async(fileData, setIsLoading, onSuccess) => {
 const asyncEditionThumbnailCompress = (path, id) => {
   return new Promise(async(resolve, reject) => {
     try{
-      const res = await fetch("https://samara-image-compression-function-979817516257.asia-southeast2.run.app",
+      const res = await fetch(process.env.NEXT_PUBLIC_COMPRESS_FUNCTION,
         {
           method: "POST",
           headers: {

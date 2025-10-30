@@ -40,7 +40,7 @@ export const EditionsTable = ({ data, onChange }) => {
                   <td className="pl-8 py-4">
                     <div className="flex gap-2 items-end">
                     <Image
-                      src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + edition.thumbnail_img}
+                      src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + edition.thumbImg}
                       width={100}
                       height={0}
                       className="w-1/2"
@@ -67,7 +67,7 @@ export const EditionsTable = ({ data, onChange }) => {
                       </div>
                     </div>
                   </td>
-                  <td className="pl-8 py-4">{edition.published_at}</td>
+                  <td className="pl-8 py-4">{edition.publishedAt}</td>
                   <td className="px-4 py-4">{edition.action}</td>
                   <td className="px-4 py-4">{edition.status}</td>
                 </tr>

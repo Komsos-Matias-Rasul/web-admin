@@ -32,7 +32,7 @@ const fetchEditionData = async (endpoint) => {
     title: article.title,
     writer: article.writer,
     category: article.category,
-    status: article.published_at ? "PUBLISHED" : "DRAFT",
+    status: article.publishedAt ? "PUBLISHED" : "DRAFT",
   }))
 
   return articles

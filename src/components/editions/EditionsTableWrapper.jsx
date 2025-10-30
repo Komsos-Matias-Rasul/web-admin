@@ -13,7 +13,7 @@ import Link from "next/link";
 const ActionsButtonGroup = ({ editionData }) => (
   <div className="flex gap-2 justify-center">
     <EditEditionInfoModal data={editionData} />
-    <Link href={`/admin/editions/${editionData.rowId}/articles`}>
+    <Link href={`/admin/editions/${editionData.editionId}/articles`}>
       <button
         className="bg-sky-700 text-white hover:bg-sky-600 active:bg-sky-800 p-2 rounded-lg transition-colors cursor-pointer"
         aria-label="manage"
@@ -24,7 +24,7 @@ const ActionsButtonGroup = ({ editionData }) => (
     </Link>
     {
       editionData.publishedAt === null &&
-      <PublishEdition editionId={editionData.rowId} />
+      <PublishEdition editionId={editionData.editionId} />
     }
   </div>
 )
@@ -41,18 +41,18 @@ const fetchEditionData = async (endpoint) => {
   const editions = data.editions.map(edition => ({
     key: edition.id,
     title: <p className="w-56">{edition.title}</p>,
-    thumbnail_img: edition.thumbnail_img,
-    coverImg: decodeURIComponent(edition.cover_img.split("/").pop()),
-    published_at: edition.published_at && <p>{new Date(edition.published_at).toLocaleString('id-US', {
+    thumbImg: edition.thumbImg,
+    coverImg: decodeURIComponent(edition.coverImg.split("/").pop()),
+    publishedAt: edition.publishedAt && <p>{new Date(edition.publishedAt).toLocaleString('id-US', {
       dateStyle:'medium',
     })}</p>,
     action: <ActionsButtonGroup editionData={{
-      rowId: edition.id,
-      editionTitle: edition.title,
-      editionYear: edition.edition_year,
-      publishedAt: edition.published_at,
+      editionId: edition.id,
+      title: edition.title,
+      year: edition.year,
+      publishedAt: edition.publishedAt,
     }} />,
-    status: edition.id === data.active_edition && <div className="flex justify-center"><div className="flex items-center px-2 py-1 text-xs font-semibold text-blue-primary border-2 border-blue-primary rounded-full w-fit gap-1" title="currently active"><FiEye size={15} /><label>ACTIVE</label></div></div>
+    status: edition.id === data.activeEdition && <div className="flex justify-center"><div className="flex items-center px-2 py-1 text-xs font-semibold text-blue-primary border-2 border-blue-primary rounded-full w-fit gap-1" title="currently active"><FiEye size={15} /><label>ACTIVE</label></div></div>
   }))
 
   return editions
@@ -74,7 +74,7 @@ export const EditionsTableWrapper = () => {
   return (
     <>
       <div className="w-full flex justify-end items-center my-4">
-        <CreateNewEditionModal />
+        <CreateNewEditionModal onSuccess={mutate} />
       </div>
       <EditionsTable data={data} onChange={mutate} />
     </>
