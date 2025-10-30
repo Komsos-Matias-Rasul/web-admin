@@ -8,26 +8,26 @@ import { AiFillEdit } from "react-icons/ai"
 export const EditEditionInfoModal = ({ data }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [editionTitle, setEditionTitle] = useState(data.editionTitle)
-  const [editionYear, setEditionYear] = useState(data.editionYear)
+  const [title, setTitle] = useState(data.title)
+  const [year, setYear] = useState(data.year)
   const handleReset = () => {
-    setEditionTitle(data.editionTitle)
-    setEditionYear(data.editionYear)
+    setTitle(data.title)
+    setYear(data.year)
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (editionYear < 1970){
+    if (year < 1970){
       toast.error("Tahun edisi tidak valid")
       return
     }
 
     try {
       setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.rowId}/save-info`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.editionId}/save-info`, {
         method: "PUT",
         body: JSON.stringify({
-          "title": editionTitle,
-          "year": Number(editionYear)
+          "title": title,
+          "year": Number(year)
         })
       })
       const jsonData = await res.json()
@@ -61,8 +61,8 @@ export const EditEditionInfoModal = ({ data }) => {
               <label className="text-sm text-dark-primary/75 font-semibold">Judul Edisi: <span className="text-rose-500">*</span></label>
               <input
                 placeholder="Zaitun Edisi Paskah 2013"
-                value={editionTitle}
-                onChange={(e) => setEditionTitle(e.target.value)}
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
                 required
                 disabled={isLoading}
@@ -72,8 +72,8 @@ export const EditEditionInfoModal = ({ data }) => {
               <label className="text-sm text-dark-primary/75 font-semibold">Tahun Edisi: <span className="text-rose-500">*</span></label>
               <input
                 placeholder={2013}
-                value={editionYear}
-                onChange={(e) => setEditionYear(e.target.value)}
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
                 className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
                 required
                 type="number"

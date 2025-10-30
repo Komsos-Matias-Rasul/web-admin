@@ -27,7 +27,7 @@ const handleSubmit = async (editionData, setIsLoading, _onSuccess) => {
   }
 }
 
-export const CreateNewEditionModal = (onSuccess) => {
+export const CreateNewEditionModal = ({ onSuccess = () => null }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [editionTitle, setEditionTitle] = useState("")
@@ -47,15 +47,13 @@ export const CreateNewEditionModal = (onSuccess) => {
       title: editionTitle,
       year: editionYear,
     }
-    handleSubmit(
-      editionData,
-      setIsLoading,
-      ()=> {
-        setEditionTitle("")
-        setEditionYear("")
-        setIsModalOpen(false)
-        onSuccess()
-    })
+    const _onSuccess = () => {
+      setEditionTitle("")
+      setEditionYear("")
+      setIsModalOpen(false)
+      onSuccess()
+    }
+    handleSubmit(editionData, setIsLoading, _onSuccess)
   }
   
   return (
