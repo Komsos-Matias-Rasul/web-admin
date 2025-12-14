@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ModalComponent } from "../ModalComponent"
 import { toast } from "sonner";
 
