@@ -1,10 +1,12 @@
 import { ArticleReader } from "@/components/articleManager/ArticleReader"
 import { ArticleInfo } from "@/components/articleManager/ArticleInfo"
 import { ImagePreview } from "@/components/articleManager/ImagePreview"
+import { DeleteArticle } from "@/components/articleManager/DeleteArticle"
 
 const EditArticlePage = async ({ params }) => {
   const param = await params
   const articleId = Number(param.articleId)
+  const editionId = Number(param.editionId)
 
   return (
     <main className="flex gap-4">
@@ -14,6 +16,7 @@ const EditArticlePage = async ({ params }) => {
     <div className="flex flex-col gap-4 w-2/5">
       <ArticleInfo articleId={articleId} />
       <ImagePreview articleId={articleId} />
+      <DeleteArticle articleId={articleId} editionId={editionId} />
     </div>
   </main>
   )
