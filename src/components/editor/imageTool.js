@@ -63,10 +63,13 @@ export default class SimpleImage {
 
   save(blockContent){
     const img = blockContent.querySelector('img')
+    const caption = blockContent.querySelector('input')
+    
     return {
       file:{
         url: img ? img.id : ""
-      }
+      },
+      caption: caption.value,
     }
   }
 
@@ -74,10 +77,11 @@ export default class SimpleImage {
     const image = document.createElement('img');
     const caption = document.createElement('input');
     const imgInput = document.getElementById("content-img-input")
-    
     image.id = url
     image.src = process.env.NEXT_PUBLIC_GCLOUD_PREFIX + url;
     caption.placeholder = 'Caption...';
+    caption.value = this.data && this.data.caption ? this.data.caption : '';
+    caption.className = "w-full mt-2 p-2 bg-slate-100"
     this.wrapper.appendChild(image);
     this.wrapper.appendChild(caption);
     if(imgInput) this.wrapper.removeChild(imgInput)
