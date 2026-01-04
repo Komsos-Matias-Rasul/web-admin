@@ -4,6 +4,36 @@ import { toast } from 'sonner'
 import { useState } from "react"
 import { FiUploadCloud } from "react-icons/fi"
 
+const asyncBeritaImgCompress = (path, id) => {
+  return new Promise(async(resolve, reject) => {
+    try{
+      const res = await fetch(process.env.NEXT_PUBLIC_COMPRESS_FUNCTION,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "path": path
+          })
+        })
+      const jsonData = await res.json()
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/berita/${id}/cover/thumbnail`,
+        {
+          method: "PUT",
+          body: JSON.stringify({
+            fileName: jsonData.url,
+          })
+        })
+      resolve()
+    } catch (err) {
+      toast.warning("Failed to generate thumbnail")
+      console.error(err)
+      reject(err)
+    }
+  })
+}
+
 const handleSubmit = async (beritaData, setIsLoading, _onSuccess) => {
   try {
     setIsLoading(true)
@@ -17,7 +47,7 @@ const handleSubmit = async (beritaData, setIsLoading, _onSuccess) => {
       throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
     }
 
-    const { url, location } = jsonData.data
+    const { url, location, beritaId } = jsonData.data
     res = await fetch(url,{
       headers: {
         "Content-Type": beritaData.selectedImage.type
@@ -28,7 +58,11 @@ const handleSubmit = async (beritaData, setIsLoading, _onSuccess) => {
     if (!res.ok) {
       throw new Error(`${res.status}`)
     }
-    toast.success("Edisi berhasil ditambahkan")
+
+    // call asynchronous work to cloud function
+    asyncBeritaImgCompress(location, beritaId)
+
+    toast.success("Berita berhasil ditambahkan")
     _onSuccess()
   } catch (err) {
     console.error(err)
