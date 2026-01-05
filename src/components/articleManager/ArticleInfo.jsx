@@ -14,8 +14,8 @@ const fetchArticleInfo = async(endpoint) => {
   const initialData = {
     id: data.id,
     title: data.title,
-    writerId: data.writer_id,
-    categoryId: data.category_id
+    writerId: data.writerId,
+    categoryId: data.categoryId
   }
   return initialData
 }
