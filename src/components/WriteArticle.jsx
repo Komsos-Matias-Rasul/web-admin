@@ -18,7 +18,8 @@ export const Editor = dynamic(() => import("@/components/Editor"), {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            contents: articleData.contents
+            contents: articleData.contents,
+            thumbText: articleData.thumbText,
           }),
         })
       const jsonData = await res.json()
@@ -51,9 +52,18 @@ const WriteArticle = ({ articleContents, articleId, articleLastUpdate }) => {
   
   const onSubmit = (e) => {
     e.preventDefault()
+    const items = contents.blocks
+    const paragraphs = []
+    items.forEach((item, i) => {
+      if (item.type === "paragraph") {
+        paragraphs.push(item.data.text)
+      }
+    })
+    const thumbText = paragraphs.join(" ")
     const articleData = {
       id: articleId,
-      contents: contents,
+      contents,
+      thumbText,
     }
     handleSubmit(articleData, setIsLoading, setLastUpdate)
   }

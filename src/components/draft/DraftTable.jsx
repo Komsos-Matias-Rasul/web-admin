@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
-import { PublishButton } from "./PublishButton";
 import useSWR from "swr";
 
 const ActionsButtonGroup = ({ rowId }) => (
@@ -16,7 +15,6 @@ const ActionsButtonGroup = ({ rowId }) => (
           <AiFillEdit size={15} />
       </button>
     </Link>
-    <PublishButton rowId={rowId} />
   </div>
 )
 

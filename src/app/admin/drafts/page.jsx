@@ -1,7 +1,7 @@
 import { DraftTable } from "@/components/draft/DraftTable"
 import Link from "next/link"
 import { AiFillEdit } from "react-icons/ai";
-import { PublishButton } from "../../../components/draft/PublishButton";
+// import { PublishButton } from "../../../components/draft/PublishButton";
 import { PageHeader } from "@/components/PageHeader";
 
 
@@ -16,7 +16,7 @@ const ActionsButtonGroup = ({ rowId }) => (
           <AiFillEdit size={15} />
       </button>
     </Link>
-    <PublishButton rowId={rowId} />
+    {/* <PublishButton rowId={rowId} /> */}
   </div>
 )
 

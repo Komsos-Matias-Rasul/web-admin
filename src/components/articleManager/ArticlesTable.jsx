@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { AiFillEdit } from "react-icons/ai";
 import useSWR from "swr";
+import { PublishButton } from "../draft/PublishButton";
 
-const ActionsButtonGroup = ({ editionId, articleId }) => (
+const ActionsButtonGroup = ({ editionId, articleId, onReload, isPublished }) => (
   <div className="flex gap-2 justify-center">
     <Link href={`/admin/editions/${ editionId }/articles/${ articleId }`}>
       <button
@@ -15,6 +16,7 @@ const ActionsButtonGroup = ({ editionId, articleId }) => (
         <AiFillEdit size={15} />
       </button>
     </Link>
+    { !isPublished && <PublishButton rowId={articleId} onSuccess={onReload} /> }
   </div>
 )
 
@@ -39,7 +41,7 @@ const fetchEditionData = async (endpoint) => {
 }
 
 export const ArticlesTable = ({ editionId }) => {
-  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${editionId}/articles`, fetchEditionData)
+  const { data, error, isLoading, mutate } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${editionId}/articles`, fetchEditionData)
   if (isLoading) return (
     <div className="text-amber-600 bg-amber-200 border border-amber-600/50 px-8 py-4 rounded-lg animate-pulse">
       Loading edition data . . .
@@ -73,6 +75,8 @@ export const ArticlesTable = ({ editionId }) => {
                 <ActionsButtonGroup
                   editionId={editionId}
                   articleId={article.key}
+                  onReload={mutate}
+                  isPublished={article.status === "PUBLISHED"}
                 />
               </td>
             </tr>
