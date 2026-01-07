@@ -7,22 +7,11 @@ import { FiUploadCloud } from "react-icons/fi"
 const asyncBeritaImgCompress = (path, id) => {
   return new Promise(async(resolve, reject) => {
     try{
-      const res = await fetch(process.env.NEXT_PUBLIC_COMPRESS_FUNCTION,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            "path": path
-          })
-        })
-      const jsonData = await res.json()
       await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/berita/${id}/cover/thumbnail`,
         {
           method: "PUT",
           body: JSON.stringify({
-            fileName: jsonData.url,
+            objPath: path,
           })
         })
       resolve()
