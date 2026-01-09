@@ -29,8 +29,7 @@ export const BeritaTable = ({ data, onChange }) => {
             <th className="py-2 px-8 text-left">Gambar</th>
             <th className="py-2 px-8 text-left">Mulai Publikasi</th>
             <th className="py-2 px-8 text-left">Berhenti Publikasi</th>
-            {/* <th className="py-2 px-8">Action</th> */}
-            {/* <th className="py-2 px-8">Status</th> */}
+            <th className="py-2 px-8 text-left">Aksi</th>
           </tr>
         </thead>
         <tbody>
@@ -51,8 +50,7 @@ export const BeritaTable = ({ data, onChange }) => {
                   </td>
                   <td className="pl-8 py-4">{edition.publishStart}</td>
                   <td className="pl-8 py-4">{edition.publishEnd}</td>
-                  {/* <td className="px-4 py-4">{edition.action}</td>
-                  <td className="px-4 py-4">{edition.status}</td> */}
+                  <td className="px-4 py-4">{edition.action}</td>
                 </tr>
             ))
           }
