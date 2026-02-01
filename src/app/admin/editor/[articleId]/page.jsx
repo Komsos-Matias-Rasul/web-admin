@@ -1,6 +1,11 @@
 import { PageHeader } from "@/components/PageHeader"
 import WriteArticle from "@/components/WriteArticle"
 
+export const metadata = {
+  title: "Samara | Editorial - Tulis Artikel",
+  description: "Samara | Editorial - Tulis Artikel",
+};
+
 const EditArticlePage = async ({ params }) => {
   const param = await params
   const articleId = Number(param.articleId)

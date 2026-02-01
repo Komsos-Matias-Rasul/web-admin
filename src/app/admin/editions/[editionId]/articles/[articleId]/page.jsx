@@ -3,6 +3,11 @@ import { ArticleInfo } from "@/components/articleManager/ArticleInfo"
 import { ImagePreview } from "@/components/articleManager/ImagePreview"
 import { DeleteArticle } from "@/components/articleManager/DeleteArticle"
 
+export const metadata = {
+  title: "Samara | Editorial - Info Artikel",
+  description: "Samara | Editorial - Info Artikel",
+};
+
 const EditArticlePage = async ({ params }) => {
   const param = await params
   const articleId = Number(param.articleId)

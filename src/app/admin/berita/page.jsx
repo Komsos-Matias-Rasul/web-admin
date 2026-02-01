@@ -1,6 +1,11 @@
 import { PageHeader } from "@/components/PageHeader"
 import { BeritaTableWrapper } from "@/components/berita/BeritaTableWrapper"
 
+export const metadata = {
+  title: "Samara | Berita Paroki",
+  description: "Manajer Berita Paroki",
+};
+
 const EditionsPage = async () => {
   return (
     <>

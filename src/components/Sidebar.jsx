@@ -1,4 +1,5 @@
 "use client"
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
@@ -18,11 +19,8 @@ const SideNavigation = () => {
   const [activePage, setActivePage] = useState()
   useEffect(() => {
     const path = window.location.pathname
-    if (path.includes("/drafts")){
-      setActivePage("Drafts")
-    }
     if (path.includes("/editions")){
-      setActivePage("Editions")
+      setActivePage("Zaitun")
     }
     if (path.includes("/berita")){
       setActivePage("Berita Paroki")
@@ -31,9 +29,10 @@ const SideNavigation = () => {
   
   return (
     <div className="h-screen fixed flex flex-col w-[20%] shrink-0 bg-dark-primary">
-      <p>Komsos Samara</p>
-      <NavButton pageName="Drafts" onClick={() => setActivePage("Drafts")} activePage={activePage} targetUrl="/admin/drafts" />
-      <NavButton pageName="Editions" onClick={() => setActivePage("Editions")} activePage={activePage} targetUrl="/admin/editions" />
+      <div className="flex justify-center my-8">
+        <img src="/top-logo.svg" className="w-4/5" />
+      </div>
+      <NavButton pageName="Zaitun" onClick={() => setActivePage("Zaitun")} activePage={activePage} targetUrl="/admin/editions" />
       <NavButton pageName="Berita Paroki" onClick={() => setActivePage("Berita Paroki")} activePage={activePage} targetUrl="/admin/berita" />
     </div>
   )

@@ -1,3 +1,10 @@
+{
+  /** 
+   * @deprecated
+   * This page is not used anymore.
+  */
+}
+
 import { DraftTable } from "@/components/draft/DraftTable"
 import Link from "next/link"
 import { AiFillEdit } from "react-icons/ai";
@@ -21,6 +28,11 @@ const ActionsButtonGroup = ({ rowId }) => (
 )
 
 const ArticlesPage = async () => {
+  /** 
+   * @deprecated
+   * This page is not used anymore.
+  */
+
   let draftedArticle = []
   try{
     const res = await fetch(`${process.env.BACKEND_URL}/api/core/drafts`)

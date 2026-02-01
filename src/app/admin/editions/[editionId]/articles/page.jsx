@@ -3,6 +3,11 @@ import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { WriteArticleButton } from "./WriteArticleButton"
 
+export const metadata = {
+  title: "Samara | Zaitun - Artikel",
+  description: "Samara | Zaitun - Artikel",
+};
+
 // TODO: Secure page by check if the article is exists.
 const ArticleManagerPage = async ({ params }) => {
   const param = await params
