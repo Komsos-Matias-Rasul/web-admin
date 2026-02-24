@@ -3,6 +3,7 @@ import { useState } from "react"
 import { AddWriterModal } from "./AddWriterModal"
 import { ModalComponent } from "../ModalComponent"
 import { toast } from "sonner"
+import Select from "react-select"
 
 const handleSubmit = async (articleInfo, setIsLoading, mutator, onClose) => {
   const {id, title, writerId, categoryId} = articleInfo
@@ -85,7 +86,7 @@ export const SettingsModal = ({
 
       <ModalComponent isOpen={isModalOpen}>
         <div className="text-dark-primary text-lg font-semibold">Perbarui Informasi Artikel</div>
-        <form onReset={onReset} onSubmit={onSubmit} className="w-[30rem]">
+        <form onReset={onReset} onSubmit={onSubmit} className="w-120">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Judul Artikel: <span className="text-rose-500">*</span></label>
@@ -101,11 +102,26 @@ export const SettingsModal = ({
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Penulis: <span className="text-rose-500">*</span></label>
               <div className="flex gap-2 w-full">
-                <select
-                  value={selectedWriter}
-                  onChange={(e) => setSelectedWriter(e.target.value)}
-                  disabled={isLoading}
-                  className="flex-1 border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                <Select
+                  // value={categories.data.map(category =>({
+                  //   value: category.id,
+                  //   label: category.label
+                  // }))
+                  //   .find(c => c.value === Number(selectedCategory)) || null}
+
+                  value={writers.data.map(writer =>({
+                    value: writer.id,
+                    label: writer.writerName 
+                  })).find(c => c.value === Number(selectedWriter)) || null}
+                  
+                  onChange={(selected) => setSelectedWriter(selected.id)}
+                  options={writers.data.map(writer => ({
+                    value: writer.id,
+                    label: writer.writerName,
+                    id: writer.id
+                  }))}
+                  isDisabled={isLoading}
+                  className="flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                   required
                 >
                   <option value="">Select a writer</option>
@@ -114,7 +130,7 @@ export const SettingsModal = ({
                       {writer.writerName}
                     </option>
                   ))}
-                </select>
+                </Select>
                 <button
                   className="text-sm text-blue-primary font-bold hover:bg-blue-primary/20 active:bg-blue-primary/50 px-4 py-2 rounded-lg transition-colors cursor-pointer"
                   aria-label="add writer"
@@ -128,11 +144,19 @@ export const SettingsModal = ({
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Kategori: <span className="text-rose-500">*</span></label>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+              <Select
+                value={categories.data.map(category =>({
+                  value: category.id,
+                  label: category.label
+                }))
+                  .find(c => c.value === Number(selectedCategory)) || null}
+                onChange={(selected) => setSelectedCategory(selected?.value || "")}
+                options={categories.data.map(category => ({
+                  value: category.id,
+                  label: category.label
+                }))}
                 disabled={isLoading}
-                className="w-full border p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 required
               >
                 <option value="">Select a category</option>
@@ -141,7 +165,7 @@ export const SettingsModal = ({
                     {category.label}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
           <div className="flex w-full justify-end gap-2 mt-4">

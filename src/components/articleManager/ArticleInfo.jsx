@@ -98,21 +98,21 @@ export const ArticleInfo = ({articleId}) => {
         </div> :
         (
           <>
-            <div className="flex flex-col mb-4">
-              <label className="text-dark-secondary font-semibold">Judul</label>
-              <p className="text-dark-primary/80">{initialData.title}</p>
-            </div>
-            <div className="flex flex-col mb-4">
-              <label className="text-dark-secondary font-semibold">Penulis</label>
-              <p className="text-dark-primary/80">{getWriterName(initialData.writerId, writers)}</p>
-            </div>
-            <div className="flex flex-col mb-4">
-              <label className="text-dark-secondary font-semibold">Kategori</label>
-              <p className="text-dark-primary/80">{getCategoryName(initialData.categoryId, categories)}</p>
-            </div>
-            <div className="flex flex-col mb-4">
-              <label className="text-dark-secondary font-semibold">Status</label>
-              <p className="text-dark-primary/80">{getCategoryName(initialData.categoryId, categories)}</p>
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
+              <div className="grid grid-cols-3 gap-y-3 text-sm">
+                <span className="font-semibold text-dark-secondary">Judul</span>
+                <span className="col-span-2 text-dark-primary">{initialData.title}</span>
+
+                <span className="font-semibold text-dark-secondary">Penulis</span>
+                <span className="col-span-2 text-dark-primary">
+                  {getWriterName(initialData.writerId, writers)}
+                </span>
+
+                <span className="font-semibold text-dark-secondary">Kategori</span>
+                <span className="col-span-2 text-dark-primary">
+                  {getCategoryName(initialData.categoryId, categories)}
+                </span>
+              </div>
             </div>
             <SettingsModal
               articleId={initialData.id}

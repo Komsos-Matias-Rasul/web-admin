@@ -2,6 +2,7 @@ export const ModalComponent = ({isOpen, children}) => {
   return (
     <div className={`
       fixed inset-0 flex justify-center z-100
+      max-h-screen overflow-y-auto
       items-center transition-colors 
       ${isOpen ? "visible bg-dark-primary/40" : "invisible" }
     `}>
