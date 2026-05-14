@@ -1,59 +1,34 @@
-// import { getDB } from "@/lib/db";
-// import bcrypt from "bcryptjs";
-// import { cookies } from "next/headers"; 
+import { NextResponse } from 'next/server';
 
-// export async function POST(request) {
-//   try {
-//     const { email, password } = await request.json();
+export async function POST(request) {
+  try {
+    const { email, password } = await request.json();    
+    const goResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
 
-//     if (!email || !password) {
-//       return new Response(JSON.stringify({ error: "Email and Password are required" }), {
-//         status: 400,
-//         headers: { "Content-Type": "application/json" },
-//       });
-//     }
+    const data = await goResponse.json();
 
-//     const db = getDB();
-//     const queryResult = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (!goResponse.ok) {
+      return NextResponse.json({ error: data.error || 'login gagal bor/sis' }, { status: goResponse.status });
+    }
 
-//     if (queryResult.rows.length === 0) {
-//       return new Response(JSON.stringify({ error: "Invalid email or password" }), {
-//         status: 401,
-//         headers: { "Content-Type": "application/json" },
-//       });
-//     }
+    // save token ke cookies, samain 4 jem exp nya
+    const response = NextResponse.json({ success: true }, { status: 200 });
+    response.cookies.set({
+      name: 'auth_token',
+      value: data.token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: 60 * 60 * 4 
+    });
 
-//     const user = queryResult.rows[0];
-//     const isPasswordValid = await bcrypt.compare(password, user.password);
-
-//     if (!isPasswordValid) {
-//       return new Response(JSON.stringify({ error: "Invalid email or password" }), {
-//         status: 401,
-//         headers: { "Content-Type": "application/json" },
-//       });
-//     }
-
-//     // Set cookie
-//     const cookieStore = cookies();
-//     cookieStore.set("user_id", String(user.id), {
-//       path: "/",
-//       httpOnly: true,
-//       secure: process.env.NODE_ENV === "production",
-//       sameSite: "lax",
-//       maxAge: 60 * 60 * 24,
-//     });
-
-//     return new Response(JSON.stringify({ success: true }), {
-//       status: 200,
-//       headers: { "Content-Type": "application/json" },
-//     });
-
-//   } catch (error) {
-//     console.error(error);
-
-//     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-//       status: 500,
-//       headers: { "Content-Type": "application/json" },
-//     });
-//   }
-// }
+    return response;
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}

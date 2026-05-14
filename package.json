@@ -16,7 +16,6 @@
     "@editorjs/quote": "^2.7.4",
     "@google-cloud/storage": "^7.14.0",
     "@tailwindcss/postcss": "^4.1.18",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "next": "^15.5.9",
     "react": "^19.2.3",
@@ -30,6 +29,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
+    "@types/bcrypt": "^6.0.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "15.0.3",
     "postcss": "^8",
