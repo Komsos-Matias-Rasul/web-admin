@@ -6,7 +6,7 @@ export const metadata = {
   description: "Manajer Berita Paroki",
 };
 
-const EditionsPage = async () => {
+const BeritaPage = () => {
   return (
     <>
       <PageHeader title="Berita Paroki Manager" />
@@ -16,4 +16,4 @@ const EditionsPage = async () => {
   )
 }
 
-export default EditionsPage
+export default BeritaPage

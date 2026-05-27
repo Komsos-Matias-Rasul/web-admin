@@ -4,6 +4,7 @@ import { AddWriterModal } from "./AddWriterModal"
 import { ModalComponent } from "../ModalComponent"
 import { toast } from "sonner"
 import Select from "react-select"
+import { AddCategoryModal } from "./AddCategoryModal"
 
 const handleSubmit = async (articleInfo, setIsLoading, mutator, onClose) => {
   const {id, title, writerId, categoryId} = articleInfo
@@ -48,6 +49,7 @@ export const SettingsModal = ({
   const [selectedCategory, setSelectedCategory] = useState(initialData.categoryId)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isWriterModalOpen, setIsWriterModalOpen] = useState(false)
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const onReset = () => {
@@ -144,6 +146,7 @@ export const SettingsModal = ({
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Kategori: <span className="text-rose-500">*</span></label>
+              <div className="flex gap-2 w-full">
               <Select
                 value={categories.data.map(category =>({
                   value: category.id,
@@ -166,6 +169,16 @@ export const SettingsModal = ({
                   </option>
                 ))}
               </Select>
+              <button
+                  className="text-sm text-blue-primary font-bold hover:bg-blue-primary/20 active:bg-blue-primary/50 px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                  aria-label="add category"
+                  title="Tambah Kategori"
+                  type="button"
+                  onClick={() => {setIsCategoryModalOpen(true)}}
+                >
+                Tambah
+                </button>
+              </div>
             </div>
           </div>
           <div className="flex w-full justify-end gap-2 mt-4">
@@ -192,6 +205,7 @@ export const SettingsModal = ({
         </form>
       </ModalComponent>
       <AddWriterModal isOpen={isWriterModalOpen} setIsOpen={setIsWriterModalOpen} mutateWriters={writers.mutate}/>
+      <AddCategoryModal editionId={initialData.editionId} isOpen={isCategoryModalOpen} setIsOpen={setIsCategoryModalOpen} mutateCategories={categories.mutate}/>
     </>
   )
 }
