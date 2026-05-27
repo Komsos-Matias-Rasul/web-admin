@@ -66,7 +66,7 @@ export const AddCategoryModal = ({editionId, isOpen, setIsOpen, mutateCategories
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Kategori: <span className="text-rose-500">*</span></label>
               <input
-                placeholder="Farhan Kebab"
+                placeholder="Katekese"
                 value={categoryName}
                 className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
                 disabled={isLoading}

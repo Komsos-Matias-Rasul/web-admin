@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader"
 import WriteArticle from "@/components/WriteArticle"
+import { BackButton } from "@/components/BackButton";
 
 export const metadata = {
   title: "Samara | Editorial - Tulis Artikel",
@@ -10,6 +11,7 @@ const EditArticlePage = async ({ params }) => {
   const param = await params
   const articleId = Number(param.articleId)
   let initialData
+
   try {
     const res = await fetch(`${process.env.BACKEND_URL}/api/core/articles/${articleId}`)
     const jsonData = await res.json()
@@ -41,6 +43,9 @@ const EditArticlePage = async ({ params }) => {
   
   return (
     <main>
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader title="Tulis Artikel" />
       <div className="flex gap-4 text-dark-primary/75 text-lg mb-2">
         <label className="font-semibold">Judul artikel:</label>

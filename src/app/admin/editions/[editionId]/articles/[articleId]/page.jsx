@@ -2,6 +2,7 @@ import { ArticleReader } from "@/components/articleManager/ArticleReader"
 import { ArticleInfo } from "@/components/articleManager/ArticleInfo"
 import { ImagePreview } from "@/components/articleManager/ImagePreview"
 import { DeleteArticle } from "@/components/articleManager/DeleteArticle"
+import { BackButton } from "@/components/BackButton";
 
 export const metadata = {
   title: "Samara | Editorial - Info Artikel",
@@ -16,6 +17,9 @@ const EditArticlePage = async ({ params }) => {
   return (
     <main className="flex gap-4">
     <div className="w-3/5">
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <ArticleReader articleId={articleId}/>
     </div>
     <div className="flex flex-col gap-4 w-2/5">

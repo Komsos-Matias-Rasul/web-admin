@@ -2,6 +2,7 @@ import { ArticlesTable } from "@/components/articleManager/ArticlesTable"
 import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { WriteArticleButton } from "./WriteArticleButton"
+import { BackButton } from "@/components/BackButton";
 
 export const metadata = {
   title: "Samara | Zaitun - Artikel",
@@ -29,6 +30,9 @@ const ArticleManagerPage = async ({ params }) => {
 
   return (
     <>
+      <div className="mb-4">
+        <BackButton />
+      </div>
       <PageHeader title="Manage Articles" />
       <div className="flex flex-col gap-2 mt-4 py-4">
         <p>Edition Name: {edTitle}</p>
