@@ -28,3 +28,24 @@
     transform: rotate(360deg);
   }
 }
+
+/* WebKit Styling */
+.article-table::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.article-table::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 5px;
+}
+
+.article-table::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox Styling */
+.article-table {
+  scrollbar-color: #c0c5cf transparent;
+  scrollbar-width: thin;
+}

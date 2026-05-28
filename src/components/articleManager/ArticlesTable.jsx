@@ -53,36 +53,38 @@ export const ArticlesTable = ({ editionId }) => {
     </div>
   )
   return (
-    <table className="w-full rounded-lg overflow-hidden">
-      <thead>
-        <tr className="text-white uppercase text-sm bg-blue-primary">
-          <th className="py-2 px-8 text-left">Title</th>
-          <th className="py-2 px-8 text-left">Writer</th>
-          <th className="py-2 px-8 text-left">Category</th>
-          <th className="py-2 px-8">Status</th>
-          <th className="py-2 px-8">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          data.map(article => (
-            <tr key={article.key} className="bg-white text-dark-primary">
-              <td className="pl-8 py-4 font-semibold">{article.title}</td>
-              <td className="pl-8 py-4">{article.writer}</td>
-              <td className="pl-8 py-4">{article.category}</td>
-              <td className="px-4 py-4">{article.status}</td>
-              <td className="px-4 py-4">
-                <ActionsButtonGroup
-                  editionId={editionId}
-                  articleId={article.key}
-                  onReload={mutate}
-                  isPublished={article.status === "PUBLISHED"}
-                />
-              </td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
+    <div className="max-h-[70vh] overflow-y-scroll rounded-lg article-table">
+      <table>
+        <thead className="sticky top-0">
+          <tr className="text-white uppercase text-sm bg-blue-primary">
+            <th className="py-2 px-8 text-left">Judul Artikel</th>
+            <th className="py-2 px-8 text-left">Nama Penulis</th>
+            <th className="py-2 px-8 text-left">Kategori</th>
+            <th className="py-2 px-8">Status</th>
+            <th className="py-2 px-8">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            data.map(article => (
+              <tr key={article.key} className="bg-white text-dark-primary">
+                <td className="pl-8 py-4 font-semibold">{article.title}</td>
+                <td className="pl-8 py-4">{article.writer}</td>
+                <td className="pl-8 py-4">{article.category}</td>
+                <td className="px-4 py-4">{article.status}</td>
+                <td className="px-4 py-4">
+                  <ActionsButtonGroup
+                    editionId={editionId}
+                    articleId={article.key}
+                    onReload={mutate}
+                    isPublished={article.status === "PUBLISHED"}
+                  />
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
   )
 }

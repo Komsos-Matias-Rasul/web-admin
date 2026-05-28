@@ -3,6 +3,7 @@ import { PageHeader } from "@/components/PageHeader"
 import { StatusActive, StatusPrivate, StatusPublic } from "@/components/VisibilityStatus"
 import { WriteArticleButton } from "./WriteArticleButton"
 import { BackButton } from "@/components/BackButton";
+import { CategoriesTable } from "@/components/articleManager/CategoriesTable";
 
 export const metadata = {
   title: "Samara | Zaitun - Artikel",
@@ -46,6 +47,7 @@ const ArticleManagerPage = async ({ params }) => {
         </div>
       </div>
       <ArticlesTable editionId={Number(param.editionId)} />
+      <CategoriesTable editionId={Number(param.editionId)} />
     </>
   )
 }
