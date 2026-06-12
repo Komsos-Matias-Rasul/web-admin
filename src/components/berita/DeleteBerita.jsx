@@ -39,7 +39,6 @@ export const DeleteBerita = ({ beritaId }) => {
     handleDelete(beritaId, setIsLoading, _onSuccess)
   }
   return (
-    <div className="w-full p-4 bg-white rounded-lg ">
       <>
         <button
           className="text-sm bg-rose-500 text-white font-bold hover:bg-rose-400 active:bg-rose-600 p-2 rounded-lg transition-colors cursor-pointer"
@@ -78,6 +77,5 @@ export const DeleteBerita = ({ beritaId }) => {
           </form>
         </ModalComponent>
       </>
-    </div>
   )
 }

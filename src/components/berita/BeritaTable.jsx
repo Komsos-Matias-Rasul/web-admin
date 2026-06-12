@@ -1,25 +1,8 @@
 "use client"
 
 import Image from "next/image";
-import { FiEdit, FiImage } from "react-icons/fi";
-import { RenameModal } from "../articleManager/RenameModal";
-import { useState } from "react";
-import { UploadCoverModal } from "../articleManager/UploadCoverModal";
 
-export const BeritaTable = ({ data, onChange }) => {
-  const [editionId, setEditionId] = useState()
-  const [initialFilename, setInitialFilename] = useState("")
-  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false)
-  const [isUpdateImageModalOpen, setIsUpdateImageModalOpen] = useState(false)
-  const onChangeImage = (editionId) => {
-    setEditionId(editionId)
-    setIsUpdateImageModalOpen(true)
-  }
-  const onRename = (_editionId, _initialFileName) => {
-    setEditionId(_editionId)
-    setInitialFilename(_initialFileName)
-    setIsRenameModalOpen(true)
-  }
+export const BeritaTable = ({ data }) => {
   return (
     <>
       <table className="w-full rounded-lg overflow-hidden">
@@ -56,32 +39,6 @@ export const BeritaTable = ({ data, onChange }) => {
           }
         </tbody>
       </table>
-      {
-        isRenameModalOpen &&
-        <RenameModal
-          isModalOpen={isRenameModalOpen}
-          setIsModalOpen={setIsRenameModalOpen}
-          editionId={editionId}
-          initialFileName={initialFilename}
-          onClose={()=> {
-            setEditionId(null)
-            setInitialFilename("")
-          }}
-          onSuccess={onChange}
-        />
-      }
-      {
-        isUpdateImageModalOpen &&
-        <UploadCoverModal
-          editionId={editionId}
-          setIsModalOpen={setIsUpdateImageModalOpen}
-          isOpen={isUpdateImageModalOpen}
-          onClose={() => {
-            setEditionId(null)
-          }}
-          onSuccess={onChange}
-        />
-      }
     </>
   )
 }

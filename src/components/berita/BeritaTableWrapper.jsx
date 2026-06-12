@@ -4,9 +4,11 @@ import useSWR from "swr"
 import { CreateNewBeritaModal } from "./CreateNewBerita";
 import { BeritaTable } from "./BeritaTable";
 import { DeleteBerita } from "./DeleteBerita";
+import { UpdateBerita } from "./UpdateDateModal";
 
 const ActionsButtonGroup = ({ beritaData }) => (
-  <div className="flex gap-2 justify-center">
+  <div className="flex gap-2 justify-center items-center">
+    <UpdateBerita initialData={beritaData} />
     <DeleteBerita beritaId={beritaData.id} />
   </div>
 )
@@ -32,8 +34,8 @@ const fetchEditionData = async (endpoint) => {
     })}</p>,
     action: <ActionsButtonGroup beritaData={{
       id: berita.id,
-      publishStart: berita.publishStart,
-      publishEnd: berita.publishEnd,
+      publishStart: String(berita.publishStart).split("T")[0], // ISO string to YYYY-MM-dd
+      publishEnd: String(berita.publishEnd).split("T")[0],
     }} />,
   }))
 

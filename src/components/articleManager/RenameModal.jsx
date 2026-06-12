@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { ModalComponent } from "../ModalComponent"
-import { toast } from "sonner";
+import { toast } from "sonner"
 
 const handleRenameArticleCover = async(fileData, setIsLoading, onSuccess) => {
   if(fileData.fileName.trim().length === 0) {
