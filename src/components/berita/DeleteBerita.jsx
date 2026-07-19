@@ -27,14 +27,14 @@ const handleDelete = async (beritaId, setIsLoading, onSuccess) => {
   }
 }
 
-export const DeleteBerita = ({ beritaId }) => {
+export const DeleteBerita = ({ beritaId, onSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const onSubmit = (e) => {
     e.preventDefault()
     const _onSuccess = () => {
       setIsModalOpen(false)
-      window.location.reload()
+      onSuccess()
     }
     handleDelete(beritaId, setIsLoading, _onSuccess)
   }

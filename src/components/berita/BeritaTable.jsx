@@ -1,8 +1,10 @@
 "use client"
 
 import Image from "next/image";
+import { UpdateBerita } from "./UpdateDateModal";
+import { DeleteBerita } from "./DeleteBerita";
 
-export const BeritaTable = ({ data }) => {
+export const BeritaTable = ({ data, onSuccess }) => {
   return (
     <>
       <table className="w-full rounded-lg overflow-hidden">
@@ -17,13 +19,13 @@ export const BeritaTable = ({ data }) => {
         </thead>
         <tbody>
           {
-            data.map(edition => (
-                <tr key={edition.key} className="bg-white text-dark-primary">
-                  <td className="pl-8 py-4 font-semibold">{edition.title}</td>
+            data.map(berita => (
+                <tr key={berita.id} className="bg-white text-dark-primary even:bg-slate-100">
+                  <td className="pl-8 py-4 font-semibold">{berita.title}</td>
                   <td className="pl-8 py-4">
                     <div className="flex gap-2 items-end">
                     <Image
-                      src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + edition.thumbImg}
+                      src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + berita.thumbImg}
                       width={100}
                       height={0}
                       className="w-1/2"
@@ -31,9 +33,18 @@ export const BeritaTable = ({ data }) => {
                     />
                     </div>
                   </td>
-                  <td className="pl-8 py-4">{edition.publishStart}</td>
-                  <td className="pl-8 py-4">{edition.publishEnd}</td>
-                  <td className="px-4 py-4">{edition.action}</td>
+                  <td className="pl-8 py-4">{new Date(berita.publishStart).toLocaleString('id-US', {
+                        dateStyle:'medium',
+                      })}</td>
+                  <td className="pl-8 py-4">{new Date(berita.publishStart).toLocaleString('id-US', {
+                        dateStyle:'medium',
+                      })}</td>
+                  <td className="px-4 py-4">
+                  <div className="flex gap-2 justify-center items-center">
+                    <UpdateBerita initialData={berita} onSuccess={onSuccess} />
+                    <DeleteBerita beritaId={berita.id} onSuccess={onSuccess} />
+                  </div>
+                  </td>
                 </tr>
             ))
           }

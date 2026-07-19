@@ -28,7 +28,7 @@ const handleUpdate = async (beritaData, setIsLoading, onSuccess) => {
   }
 }
 
-export const UpdateBerita = ({ initialData }) => {
+export const UpdateBerita = ({ initialData, onSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [beritaData, setBeritaData] = useState(initialData)
@@ -49,7 +49,7 @@ export const UpdateBerita = ({ initialData }) => {
     e.preventDefault()
     const _onSuccess = () => {
       setIsModalOpen(false)
-      window.location.reload()
+      onSuccess()
     }
     handleUpdate({
       ...beritaData,
