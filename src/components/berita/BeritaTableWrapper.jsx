@@ -33,10 +33,10 @@ const fetchEditionData = async (endpoint) => {
       dateStyle:'medium',
     })}</p>,
     action: <ActionsButtonGroup beritaData={{
-      id: berita.id,
-      publishStart: String(berita.publishStart).split("T")[0], // ISO string to YYYY-MM-dd
+      ...berita,
+      publishStart:String(berita.publishStart).split("T")[0],
       publishEnd: String(berita.publishEnd).split("T")[0],
-    }} />,
+    }} />
   }))
 
   return editions

@@ -58,7 +58,7 @@ export const ImagePreview = ({articleId}) => {
         <Image
           id="headline-img"
           priority
-          src={`${process.env.NEXT_PUBLIC_GCLOUD_PREFIX + data.coverImg}`}
+          src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + data.coverImg}
           width={400}
           height={0}
           alt=""
