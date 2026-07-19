@@ -1,10 +1,14 @@
 "use client"
 
 import Image from "next/image";
-import { FiEdit, FiImage } from "react-icons/fi";
+import { FiEdit, FiEye, FiImage } from "react-icons/fi";
 import { RenameModal } from "../articleManager/RenameModal";
 import { useState } from "react";
 import { UploadCoverModal } from "../articleManager/UploadCoverModal";
+import { EditEditionInfoModal } from "./EditEditionInfoModal";
+import { RiBookletFill } from "react-icons/ri";
+import Link from "next/link";
+import { PublishEdition } from "./PublishEdition";
 
 export const EditionsTable = ({ data, onChange }) => {
   const [editionId, setEditionId] = useState()
@@ -35,7 +39,7 @@ export const EditionsTable = ({ data, onChange }) => {
         <tbody>
           {
             data.map(edition => (
-                <tr key={edition.key} className="bg-white text-dark-primary">
+                <tr key={edition.id} className="bg-white text-dark-primary">
                   <td className="pl-8 py-4 font-semibold">{edition.title}</td>
                   <td className="pl-8 py-4">
                     <div className="flex gap-2 items-end">
@@ -68,8 +72,38 @@ export const EditionsTable = ({ data, onChange }) => {
                     </div>
                   </td>
                   <td className="pl-8 py-4">{edition.publishedAt}</td>
-                  <td className="px-4 py-4">{edition.action}</td>
-                  <td className="px-4 py-4">{edition.status}</td>
+                  <td className="px-4 py-4">
+                  <div className="flex gap-2 justify-center">
+                      <EditEditionInfoModal initialData={edition} onSuccess={onChange} />
+                      <Link href={`/admin/editions/${edition.id}/articles`}>
+                        <button
+                          className="bg-sky-700 text-white hover:bg-sky-600 active:bg-sky-800 p-2 rounded-lg transition-colors cursor-pointer"
+                          aria-label="manage"
+                          title="Manage articles"
+                          >
+                            <RiBookletFill size={15} />
+                        </button>
+                      </Link>
+                      {
+                        edition.publishedAt === null &&
+                        <PublishEdition editionId={edition.id} />
+                      }
+                    </div>
+                  </td>
+                  <td className="px-4 py-4">
+                    {
+                      edition.status &&
+                      <div className="flex justify-center">
+                        <div
+                          className="flex items-center px-2 py-1 text-xs font-semibold text-blue-primary border-2 border-blue-primary rounded-full w-fit gap-1"
+                          title="currently active"
+                          >
+                          <FiEye size={15} />
+                          <label>ACTIVE</label>
+                        </div>
+                      </div>
+                    }
+                  </td>
                 </tr>
             ))
           }

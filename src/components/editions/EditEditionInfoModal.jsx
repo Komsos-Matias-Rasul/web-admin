@@ -5,42 +5,56 @@ import { toast } from 'sonner'
 import { useState } from "react"
 import { AiFillEdit } from "react-icons/ai"
 
-export const EditEditionInfoModal = ({ data }) => {
+const updateEditionInfo = async (data, setIsLoading, onSuccess) => {
+  try {
+    setIsLoading(true)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.id}/save-info`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    })
+    const jsonData = await res.json()
+    if (!res.ok) {
+      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
+    }
+    toast.success("Informasi edisi berhasil diperbarui")
+    onSuccess()
+  } catch (err) {
+    toast.error(err.message)
+  } finally {
+    setIsLoading(false)
+  }
+}
+
+export const EditEditionInfoModal = ({ initialData, onSuccess }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [title, setTitle] = useState(data.title)
-  const [year, setYear] = useState(data.year)
-  const handleReset = () => {
-    setTitle(data.title)
-    setYear(data.year)
+  const [editionData, setEditionData] = useState(initialData)
+  const onReset = () => {
+    setEditionData(initialData)
   }
-  const handleSubmit = async (e) => {
+  const onChange = (e) => {
+    const {name, value} = e.target
+    setEditionData({
+      ...editionData,
+      [name]: value,
+    })
+  }
+  const onSubmit = (e) => {
     e.preventDefault()
-    if (year < 1970){
+    if (editionData.year < 1970){
       toast.error("Tahun edisi tidak valid")
       return
     }
-
-    try {
-      setIsLoading(true)
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/editions/${data.editionId}/save-info`, {
-        method: "PUT",
-        body: JSON.stringify({
-          "title": title,
-          "year": Number(year)
-        })
-      })
-      const jsonData = await res.json()
-      if (!res.ok) {
-        throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
-      }
-      toast.success("Informasi edisi berhasil diperbarui")
+    const _onSuccess = () => {
       setIsModalOpen(false)
-    } catch (err) {
-      toast.error(err.message)
-    } finally {
-      setIsLoading(false)
+      onSuccess()
     }
+    const _data = {
+      id: initialData.id,
+      title: editionData.title,
+      year: Number(editionData.year),
+    }
+    updateEditionInfo(_data, setIsLoading, _onSuccess)
   }
 
   return (
@@ -55,14 +69,15 @@ export const EditEditionInfoModal = ({ data }) => {
       </button>
       <ModalComponent isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="text-dark-primary text-lg font-semibold">Perbarui Informasi Edisi</div>
-        <form onReset={handleReset} onSubmit={handleSubmit} className="w-96">
+        <form onReset={onReset} onSubmit={onSubmit} className="w-96">
           <div className="flex flex-col gap-4 mt-4">
             <div className="flex flex-col gap-2">
               <label className="text-sm text-dark-primary/75 font-semibold">Judul Edisi: <span className="text-rose-500">*</span></label>
               <input
                 placeholder="Zaitun Edisi Paskah 2013"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                name="title"
+                value={editionData.title}
+                onChange={onChange}
                 className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
                 required
                 disabled={isLoading}
@@ -72,8 +87,9 @@ export const EditEditionInfoModal = ({ data }) => {
               <label className="text-sm text-dark-primary/75 font-semibold">Tahun Edisi: <span className="text-rose-500">*</span></label>
               <input
                 placeholder={2013}
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
+                name="year"
+                value={editionData.year}
+                onChange={onChange}
                 className="bg-neutral-200 rounded px-4 py-2 text-dark-primary/75 focus:outline-none"
                 required
                 type="number"
