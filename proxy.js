@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(request) {
+export function proxy(request) {
   const token = request.cookies.get('user_id')?.value; // ini baca cookie token
 
   const isLoginPage = request.nextUrl.pathname === '/login';
