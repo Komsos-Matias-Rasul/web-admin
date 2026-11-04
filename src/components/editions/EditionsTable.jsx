@@ -86,7 +86,7 @@ export const EditionsTable = ({ data, onChange }) => {
                       </Link>
                       {
                         edition.publishedAt === null &&
-                        <PublishEdition editionId={edition.id} />
+                        <PublishEdition editionId={edition.id} editionTitle={edition.title} onSuccess={onChange} />
                       }
                     </div>
                   </td>

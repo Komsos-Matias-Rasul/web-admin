@@ -3,43 +3,64 @@
 import { useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { toast } from "sonner";
+import { ConfirmModal } from "../ConfirmModal";
 
-const handlePublish = async (articleId, onSuccess, setIsLoading) => {
-  setIsLoading(true)
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${Number(articleId)}/publish`,
-    {
-      method: 'PUT',
-    })
-    if (!res.ok) {
-      throw new Error(`${res.status} ${jsonData.data.error} (${jsonData._id})`)
-    }
-    toast.success("Artikel berhasil dipublikasi")
-    onSuccess()
-  } catch (err) {
-    console.error(err.message)
-    toast.error(err.message)
-  } finally {
-    setIsLoading(false)
+const publishArticle = async (articleId) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/core/articles/${Number(articleId)}/publish`,
+  {
+    method: 'PUT',
+  })
+  if (!res.ok) {
+    // Error body may be missing or non-JSON (e.g. proxy error page)
+    const jsonData = await res.json().catch(() => null)
+    const reason = jsonData?.data?.error ?? res.statusText
+    const traceId = jsonData?._id ? ` (${jsonData._id})` : ""
+    throw new Error(`${res.status} ${reason}${traceId}`)
   }
 }
 
-export const PublishButton = ({rowId, onSuccess}) => {
-  // const r = useRouter()
+export const PublishButton = ({ rowId, articleTitle, onSuccess }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const onPublish = () => {
-    handlePublish(rowId, onSuccess, setIsLoading)
+
+  const onConfirm = async () => {
+    setIsLoading(true)
+    try {
+      await publishArticle(rowId)
+      toast.success("Artikel berhasil dipublikasi")
+      setIsModalOpen(false)
+      onSuccess?.()
+    } catch (err) {
+      console.error(err.message)
+      toast.error(err.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <button
-      onClick={onPublish}
-      className="bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 transition-colors text-white p-2 rounded-lg cursor-pointer"
-      aria-label="publish"
-      title="Publish article"
+    <>
+      <button
+        type="button"
+        onClick={() => setIsModalOpen(true)}
+        disabled={isLoading}
+        className="bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 transition-colors text-white p-2 rounded-lg cursor-pointer disabled:cursor-not-allowed"
+        aria-label="publish"
+        title="Publish article"
       >
         {
           isLoading ? <div className="w-4 aspect-square rounded-full border-b-0 border-l-0 border-2 animate-spin" /> : <FaCheck size={15} />
         }
-    </button>
-)}
+      </button>
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={onConfirm}
+        isLoading={isLoading}
+        title="Konfirmasi Publikasi Artikel"
+        message={<p>Artikel <b>&quot;{articleTitle}&quot;</b> akan dipublikasi</p>}
+        confirmLabel="Publikasi"
+      />
+    </>
+  )
+}

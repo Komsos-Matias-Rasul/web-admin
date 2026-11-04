@@ -1,12 +1,18 @@
-export const ModalComponent = ({isOpen, children}) => {
+export const ModalComponent = ({ isOpen, onBackdropClick, children }) => {
   return (
-    <div className={`
+    <div
+      onClick={onBackdropClick}
+      className={`
       fixed inset-0 flex justify-center z-100
       max-h-screen overflow-y-auto
       items-center transition-colors 
       ${isOpen ? "visible bg-dark-primary/40" : "invisible" }
-    `}>
-      <div className={`bg-white p-4 rounded-lg transition-opacity ${isOpen ? "opacity-100" : "opacity-0" }`}>
+    `}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className={`bg-white p-4 rounded-lg transition-opacity ${isOpen ? "opacity-100" : "opacity-0" }`}
+      >
         {children}
       </div>
     </div>

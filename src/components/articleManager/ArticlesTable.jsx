@@ -5,7 +5,7 @@ import { AiFillEdit } from "react-icons/ai";
 import useSWR from "swr";
 import { PublishButton } from "../draft/PublishButton";
 
-const ActionsButtonGroup = ({ editionId, articleId, onReload, isPublished }) => (
+const ActionsButtonGroup = ({ editionId, articleId, articleTitle, onReload, isPublished }) => (
   <div className="flex gap-2 justify-center">
     <Link href={`/admin/editions/${ editionId }/articles/${ articleId }`}>
       <button
@@ -16,7 +16,7 @@ const ActionsButtonGroup = ({ editionId, articleId, onReload, isPublished }) => 
         <AiFillEdit size={15} />
       </button>
     </Link>
-    { !isPublished && <PublishButton rowId={articleId} onSuccess={onReload} /> }
+    { !isPublished && <PublishButton rowId={articleId} articleTitle={articleTitle} onSuccess={onReload} /> }
   </div>
 )
 
@@ -76,6 +76,7 @@ export const ArticlesTable = ({ editionId }) => {
                   <ActionsButtonGroup
                     editionId={editionId}
                     articleId={article.key}
+                    articleTitle={article.title}
                     onReload={mutate}
                     isPublished={article.status === "PUBLISHED"}
                   />

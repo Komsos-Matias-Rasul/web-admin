@@ -36,13 +36,13 @@ export const BeritaTable = ({ data, onSuccess }) => {
                   <td className="pl-8 py-4">{new Date(berita.publishStart).toLocaleString('id-US', {
                         dateStyle:'medium',
                       })}</td>
-                  <td className="pl-8 py-4">{new Date(berita.publishStart).toLocaleString('id-US', {
+                  <td className="pl-8 py-4">{new Date(berita.publishEnd).toLocaleString('id-US', {
                         dateStyle:'medium',
                       })}</td>
                   <td className="px-4 py-4">
                   <div className="flex gap-2 justify-center items-center">
                     <UpdateBerita initialData={berita} onSuccess={onSuccess} />
-                    <DeleteBerita beritaId={berita.id} onSuccess={onSuccess} />
+                    <DeleteBerita beritaId={berita.id} beritaTitle={berita.title} onSuccess={onSuccess} />
                   </div>
                   </td>
                 </tr>
