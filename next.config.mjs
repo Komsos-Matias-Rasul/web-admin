@@ -24,7 +24,9 @@ const nextConfig = {
         pathname: "/**"
       },
     ]
-  }
+  },
+  cacheComponents: true,
+  partialPrefetching: true
 };
 
 export default nextConfig;

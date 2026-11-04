@@ -2,6 +2,11 @@ import { PageHeader } from "@/components/PageHeader"
 import WriteArticle from "@/components/WriteArticle"
 import { BackButton } from "@/components/BackButton";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export const metadata = {
   title: "Samara | Editorial - Tulis Artikel",
   description: "Samara | Editorial - Tulis Artikel",

@@ -4,6 +4,11 @@ import { ImagePreview } from "@/components/articleManager/ImagePreview"
 import { DeleteArticle } from "@/components/articleManager/DeleteArticle"
 import { BackButton } from "@/components/BackButton";
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export const metadata = {
   title: "Samara | Editorial - Info Artikel",
   description: "Samara | Editorial - Info Artikel",

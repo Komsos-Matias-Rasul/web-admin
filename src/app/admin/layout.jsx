@@ -1,5 +1,10 @@
 import SideNavigation from "@/components/Sidebar"
 
+// @next-codemod-ignore Cache Components adoption: this segment temporarily allows blocking.
+// Remove this opt-out after verifying the segment passes validation without it.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 const AdminLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen">
