@@ -61,6 +61,7 @@ export const ImagePreview = ({articleId}) => {
           src={process.env.NEXT_PUBLIC_GCLOUD_PREFIX + data.coverImg}
           width={400}
           height={0}
+          className="w-auto"
           alt=""
           />
         <button

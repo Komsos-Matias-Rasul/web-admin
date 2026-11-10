@@ -15,7 +15,11 @@ const asyncArticleThumbnailCompress = (path, id) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            "path": path
+            "path": path,
+            "bucketName": process.env.NEXT_PUBLIC_GCLOUD_BUCKET,
+            "targetType": "jpeg",
+            "targetQuality": 80,
+            "targetWidth": 500,
           })
         })
       const jsonData = await res.json()
@@ -103,7 +107,11 @@ const asyncEditionThumbnailCompress = (path, id) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            "path": path
+            "path": path,
+            "bucketName": process.env.NEXT_PUBLIC_GCLOUD_BUCKET,
+            "targetType": "webp",
+            "targetQuality": 60,
+            "targetWidth": 500,
           })
         })
       const jsonData = await res.json()
